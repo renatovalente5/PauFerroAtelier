@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-longa-rio-escuro",
+  "conjunto": 10,
+  "nome": "Mesa de jantar longa",
+  "categoria": "mesa-jantar",
+  "resina": "preta",
+  "descricao": "Mesa de grande comprimento para muitos lugares, com rio de resina escura ao centro.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 10,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ],
+    "02": [
+      1440,
+      1800
+    ],
+    "03": [
+      1440,
+      1800
+    ]
+  }
+}

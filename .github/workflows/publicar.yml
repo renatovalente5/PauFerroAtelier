@@ -1,0 +1,57 @@
+name: Publicar
+
+# Publica a cada envio para a branch principal, e também à mão pelo separador
+# Actions quando é preciso republicar sem mexer no código.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Não cancela uma publicação a meio: o GitHub Pages não gosta de artefactos
+# interrompidos e fica com a versão anterior no ar.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # O gerador não tem dependências: não há `npm ci` porque não há package.json
+      # para instalar. O CNAME, quando existir, decide sozinho se o site é
+      # construído para a raiz de um domínio ou para o endereço de projecto.
+      - name: Gerar o site
+        run: node scripts/gerar.mjs
+
+      # O travão. Verifica ligações, imagens, contraste de atributos, o prefixo
+      # dos caminhos, o sitemap e a nota do custo das chamadas. Se falhar, não
+      # se publica — mais vale ficar no ar a versão anterior do que uma partida.
+      - name: Auditar antes de publicar
+        run: node scripts/auditar.mjs
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - id: publicacao
+        uses: actions/deploy-pages@v4

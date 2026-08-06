@@ -1,0 +1,536 @@
+/* ==========================================================================
+   PAU FERRO ATELIER
+
+   A DECISÃO DE COR, e a razão dela:
+
+   O logótipo não tem cor nenhuma — medido, saturação 0,000, 259 tons todos
+   cinzentos. É traço preto sobre branco. Portanto não há paleta para dele
+   copiar; o que ele dá é um carácter: traço fino, serifado, de ourivesaria.
+
+   A cor foi medida nas 66 fotografias das peças: 79 % madeira quente (#87694C),
+   e o resto resina em azul, turquesa e verde. São cores fortes e são o produto.
+
+   Daí a regra que manda em tudo o que está abaixo: **o site é monocromático
+   como o logótipo, e são as fotografias que trazem a cor**. Tinta quase preta
+   sobre papel quente, um único acento de petróleo tirado da resina, e mais
+   nada. Pôr o site a competir com a madeira dava ruído; assim as peças ficam a
+   ser a única coisa colorida no ecrã, que é o que se quer numa montra.
+   ========================================================================== */
+
+:root {
+  /* tinta e papel — o mundo do logótipo */
+  --tinta: #1C1A18;
+  --tinta-2: #57514A;          /* 7,3:1 sobre o papel */
+  --tinta-3: #736C62;          /* 4,92:1 sobre o papel — medido, não estimado.
+                                  O #7A736A que aqui estava dava 4,44:1 e
+                                  chumbava o AA por dois centésimos. */
+  --papel: #FAF9F6;
+  --papel-2: #F1EEE7;
+  --carta: #FFFFFF;
+  --borda: #E3DED4;
+  --borda-forte: #CFC7B9;
+
+  /* do produto */
+  --madeira: #87694C;
+  --petroleo: #1E4B52;
+  --petroleo-fundo: #163A40;
+
+  --raio: 2px;                 /* cantos quase rectos: é marcenaria, não plástico */
+  --raio-g: 4px;
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+  --larg: 1280px;
+  --t: .28s cubic-bezier(.2, 0, 0, 1);
+
+  --h-topo: 116px;
+  --h-logo: 76px;
+
+  --serif: ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+@media (max-width: 900px) {
+  :root { --h-topo: 84px; --h-logo: 54px; }
+}
+
+/* ------------------------------------------------------------------ reset */
+*, *::before, *::after { box-sizing: border-box; }
+/* O `hidden` do HTML só esconde por causa de uma regra da folha do browser, e
+   qualquer `display` nosso ganha-lhe. Sem esta linha, esconder um elemento que
+   tenha `display: flex` não esconde nada — e o filtro das peças pareceria
+   avariado. */
+[hidden] { display: none !important; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--h-topo) + 1rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+body {
+  margin: 0; background: var(--papel); color: var(--tinta);
+  font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, p, figure, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, svg, picture, video { display: block; max-width: 100%; }
+img { height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; }
+:focus-visible { outline: 2px solid var(--petroleo); outline-offset: 3px; }
+
+.envolve { max-width: var(--larg); margin-inline: auto; padding-inline: var(--gutter); }
+.envolve--texto { max-width: 74ch; }
+
+.saltar {
+  position: absolute; left: -9999px; top: .5rem; z-index: 200;
+  background: var(--tinta); color: var(--papel); padding: .7rem 1.1rem;
+}
+.saltar:focus { left: 1rem; }
+
+/* --------------------------------------------------------------- tipografia */
+.h-pagina, .h-secao, .capa__titulo, .ficha__titulo, .cartao__nome, .passo h3, .carta h3 {
+  font-family: var(--serif); font-weight: 400; letter-spacing: -.015em; line-height: 1.12;
+}
+.h-pagina { font-size: clamp(2rem, 4.6vw, 3.2rem); }
+.h-secao { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+.h-secao--espaco { margin-bottom: clamp(1.6rem, 3vw, 2.4rem); }
+.h-secao--claro, .sobretitulo--claro { color: var(--papel); }
+
+/* O sobretítulo é a única coisa em maiúsculas do site. Espaçado como a legenda
+   circular do logótipo — é a citação tipográfica que liga as duas coisas. */
+.sobretitulo {
+  font-size: .72rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--tinta-3); margin-bottom: .9rem;
+}
+.lead { font-size: clamp(1.02rem, 1.6vw, 1.18rem); color: var(--tinta-2); max-width: 62ch; margin-top: 1.1rem; }
+
+/* ------------------------------------------------------------------ botões */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+  min-height: 50px; padding: .8rem 1.5rem; cursor: pointer; text-align: center;
+  font-size: .92rem; font-weight: 600; letter-spacing: .02em;
+  border: 1px solid transparent; border-radius: var(--raio);
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.btn svg { width: 17px; height: 17px; flex: none; }
+.btn--cheio { background: var(--tinta); color: var(--papel); }
+.btn--cheio:hover { background: var(--petroleo); }
+.btn--linha { border-color: var(--borda-forte); color: var(--tinta); }
+.btn--linha:hover { border-color: var(--tinta); background: var(--tinta); color: var(--papel); }
+.btn--claro { border-color: rgba(255,255,255,.5); color: #fff; }
+.btn--claro:hover { background: #fff; border-color: #fff; color: var(--tinta); }
+
+.ligacao {
+  display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; font-size: .92rem;
+  border-bottom: 1px solid var(--borda-forte); padding-bottom: .2rem; transition: border-color var(--t);
+}
+.ligacao:hover { border-color: var(--tinta); }
+.ligacao svg { width: 16px; height: 16px; }
+
+/* --------------------------------------------------------------- cabeçalho */
+/* O logótipo entra grande e encolhe ao descer, a pedido. As alturas estão
+   escritas à mão e não em `var()`: com a variável redefinida num ANCESTRAL, a
+   transição do Chrome não reage e a altura fica presa no valor inicial. */
+.topo {
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(250, 249, 246, .92);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t), background var(--t);
+}
+.topo--encolhido { border-bottom-color: var(--borda); }
+.topo__barra {
+  max-width: var(--larg); margin-inline: auto; padding-inline: var(--gutter);
+  height: 116px; display: flex; align-items: center; gap: 2rem;
+  transition: height var(--t);
+}
+.topo--encolhido .topo__barra { height: 78px; }
+.marca { flex: none; margin-right: auto; }
+.marca img { height: 76px; width: auto; transition: height var(--t); }
+.topo--encolhido .marca img { height: 46px; }
+
+.topo__nav { display: flex; align-items: center; gap: 2rem; }
+.topo__link {
+  font-size: .93rem; font-weight: 500; color: var(--tinta-2);
+  padding-block: .35rem; position: relative; transition: color var(--t);
+}
+.topo__link::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: var(--tinta); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--t);
+}
+.topo__link:hover { color: var(--tinta); }
+.topo__link:hover::after, .topo__link[aria-current]::after { transform: scaleX(1); }
+.topo__link[aria-current] { color: var(--tinta); }
+.topo__cta { min-height: 44px; padding: .6rem 1.15rem; font-size: .88rem; }
+
+/* hambúrguer */
+.hamburger {
+  display: none; width: 46px; height: 46px; cursor: pointer; flex: none;
+  align-items: center; justify-content: center; border: 1px solid var(--borda-forte);
+  border-radius: var(--raio);
+}
+.hamburger span, .hamburger span::before, .hamburger span::after {
+  content: ''; display: block; width: 20px; height: 1.5px; background: var(--tinta);
+  transition: transform var(--t), opacity var(--t);
+}
+.hamburger span { position: relative; }
+.hamburger span::before { position: absolute; top: -6px; }
+.hamburger span::after { position: absolute; top: 6px; }
+body.menu-aberto .hamburger span { background: transparent; }
+body.menu-aberto .hamburger span::before { top: 0; transform: rotate(45deg); }
+body.menu-aberto .hamburger span::after { top: 0; transform: rotate(-45deg); }
+
+@media (max-width: 900px) {
+  .topo__nav, .topo__cta { display: none; }
+  .hamburger { display: flex; }
+  .topo__barra { height: 84px; }
+  .topo--encolhido .topo__barra { height: 64px; }
+  .marca img { height: 54px; }
+  .topo--encolhido .marca img { height: 38px; }
+  /* O bloqueio do scroll vive na media query para se libertar sozinho se a
+     janela crescer com o menu aberto — não depende de nenhum evento. */
+  body.menu-aberto { overflow: hidden; }
+}
+
+/* ------------------------------------------------- menu de ecrã inteiro */
+.menu {
+  position: fixed; inset: 0; z-index: 55; background: var(--papel);
+  opacity: 0; visibility: hidden; transition: opacity var(--t), visibility var(--t);
+  padding-top: var(--h-topo); overflow-y: auto;
+}
+body.menu-aberto .menu { opacity: 1; visibility: visible; }
+.menu__corpo {
+  padding: 2rem var(--gutter) 3rem; display: flex; flex-direction: column; gap: .2rem;
+  min-height: calc(100% - var(--h-topo)); max-width: var(--larg); margin-inline: auto;
+}
+.menu__link {
+  font-family: var(--serif); font-size: clamp(1.9rem, 8vw, 2.6rem); padding: .5rem 0;
+  border-bottom: 1px solid var(--borda);
+}
+.menu__cta { margin-top: 1.8rem; }
+.menu__pe { margin-top: auto; padding-top: 2rem; }
+
+/* ------------------------------------------------------------------- capa
+   Duas colunas: o texto encostado à margem do conteúdo, a fotografia encostada
+   à borda do ecrã. O `padding-inline-start` do lado do texto repete à mão a
+   conta que o `.envolve` faz — é o que alinha o <h1> da entrada com os títulos
+   de todas as outras secções, apesar de a coluna não ser um `.envolve`. */
+.capa {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch; border-bottom: 1px solid var(--borda);
+}
+.capa__texto { display: flex; align-items: center; padding-block: clamp(2.4rem, 5vw, 3.6rem); }
+.capa__interior {
+  padding-inline: var(--gutter) clamp(1.5rem, 4vw, 4rem);
+  padding-inline-start: max(var(--gutter), (100vw - var(--larg)) / 2 + var(--gutter));
+  width: 100%;
+}
+/* O título tem de caber com os botões no primeiro ecrã de um portátil de
+   900 px de altura — daí o tecto de 3,3rem e as 18 medidas de largura, que o
+   fazem quebrar em três linhas e não em quatro. */
+.capa__titulo { font-size: clamp(2.05rem, 4vw, 3.3rem); max-width: 18ch; }
+.capa__lead { font-size: clamp(1rem, 1.5vw, 1.12rem); color: var(--tinta-2); max-width: 42ch; margin-top: 1.1rem; }
+.capa__accoes { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1.9rem; }
+
+/* A linha de baixo é a única promessa que o site faz, e as três palavras foram
+   escolhidas por serem verificáveis: é o que o atelier faz, não um adjectivo. */
+.capa__provas {
+  display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin-top: 1.9rem;
+  padding-top: 1.3rem; border-top: 1px solid var(--borda);
+  font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--tinta-3);
+}
+.capa__provas li { display: flex; align-items: center; gap: 1.4rem; }
+.capa__provas li + li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--madeira); }
+
+/* A fotografia é posicionada em absoluto de propósito. Em fluxo normal, o
+   `height: 100%` de uma imagem dentro de uma célula de grelha de altura
+   automática resolve para "auto", e a fotografia — que é ao alto, 1440×1920 —
+   esticava a linha inteira para 960 px, empurrando os botões da entrada para
+   fora do primeiro ecrã. Em absoluto, deixa de contar para a altura: quem manda
+   passa a ser a coluna do texto, e a imagem preenche o que sobrar. */
+.capa__foto { position: relative; background: var(--papel-2); overflow: hidden; }
+.capa__foto picture { position: absolute; inset: 0; display: block; }
+.capa__foto img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.capa__legenda {
+  position: absolute; left: 0; bottom: 0; margin: 0;
+  padding: .5rem 1rem; background: rgba(28,26,24,.72); color: rgba(255,255,255,.92);
+  font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+
+@media (min-width: 901px) {
+  /* Limita a altura da entrada para que a primeira fila de peças assome por
+     baixo — quem chega percebe logo que há mais para ver e desce. */
+  .capa { min-height: min(78vh, 700px); }
+  /* Só aqui, e nunca junto ao `aspect-ratio` do telemóvel: um `min-height` a
+     valer ao mesmo tempo que uma proporção faz o browser calcular a largura a
+     partir da altura mínima. Num ecrã de 320 px a fotografia ficava com 427 px
+     e o site inteiro passava a ter barra de scroll horizontal. */
+  .capa__foto { min-height: 320px; }
+}
+@media (max-width: 900px) {
+  .capa { grid-template-columns: 1fr; }
+  /* A fotografia primeiro: é ela que diz o que é isto, e diz mais depressa do
+     que qualquer frase. O <h1> continua no primeiro ecrã e meio. */
+  .capa__foto { order: -1; aspect-ratio: 4 / 3; max-height: 52vh; }
+  .capa__interior { padding-inline: var(--gutter); }
+  .capa__titulo { max-width: 20ch; }
+}
+
+/* ---------------------------------------------------------------- secções */
+.secao { padding-block: clamp(3.2rem, 8vw, 6rem); }
+.secao--topo { padding-top: clamp(2rem, 4vw, 3rem); }
+.secao--tenue { background: var(--papel-2); }
+.secao--escura { background: var(--tinta); color: var(--papel); }
+.secao--escura p { color: rgba(250,249,246,.76); }
+.secao__topo {
+  display: flex; align-items: end; justify-content: space-between; gap: 1.5rem;
+  flex-wrap: wrap; margin-bottom: clamp(1.8rem, 3.5vw, 2.6rem);
+}
+.migalhas { font-size: .82rem; color: var(--tinta-3); margin-bottom: 1.6rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+.migalhas a:hover { color: var(--tinta); }
+
+/* ------------------------------------------------------------- grelha */
+.grelha {
+  display: grid; gap: clamp(1rem, 2.2vw, 1.8rem);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
+}
+.cartao { background: transparent; }
+.cartao__link { display: block; }
+.cartao__foto {
+  overflow: hidden; background: var(--papel-2); aspect-ratio: 4 / 3; margin-bottom: .9rem;
+  border-radius: var(--raio-g);
+}
+.cartao__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,0,0,1); }
+/* Na montra a proporção vem do próprio ficheiro, escrita no atributo `style` de
+   cada cartão — cada fotografia aparece inteira, sem corte. */
+.cartao__foto--natural { aspect-ratio: auto; }
+.cartao__foto--natural img { height: auto; object-fit: fill; }
+.cartao__link:hover .cartao__foto img { transform: scale(1.045); }
+.cartao__nome { font-size: 1.16rem; }
+.cartao__cat { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tinta-3); margin-top: .35rem; }
+
+/* ---------------------------------------------------------------- montra
+   Colunas em vez de grelha: as peças têm alturas diferentes (umas fotografadas
+   ao alto, outras ao baixo) e uma grelha alinharia todas pela mais alta,
+   deixando buracos brancos. Com colunas, cada uma encaixa onde cabe.
+   `break-inside: avoid` impede que um cartão seja partido ao meio entre duas
+   colunas — sem essa linha, o browser corta a fotografia da legenda. */
+.montra { column-count: 3; column-gap: clamp(1rem, 2.2vw, 1.8rem); }
+.montra .grelha__item { break-inside: avoid; margin-bottom: clamp(1.6rem, 3vw, 2.6rem); }
+@media (max-width: 1040px) { .montra { column-count: 2; } }
+@media (max-width: 640px) { .montra { column-count: 1; } }
+
+/* --------------------------------------------------------------- filtros */
+.filtros { display: flex; flex-wrap: wrap; gap: .5rem; margin: 2rem 0 1rem; }
+.filtro {
+  cursor: pointer; padding: .55rem 1rem; min-height: 42px;
+  border: 1px solid var(--borda-forte); border-radius: 999px;
+  font-size: .87rem; color: var(--tinta-2);
+  transition: border-color var(--t), background var(--t), color var(--t);
+}
+.filtro span { color: var(--tinta-3); margin-left: .3rem; font-variant-numeric: tabular-nums; }
+.filtro:hover { border-color: var(--tinta); color: var(--tinta); }
+.filtro[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--papel); }
+.filtro[aria-pressed="true"] span { color: rgba(250,249,246,.6); }
+.contagem { font-size: .85rem; color: var(--tinta-3); margin-bottom: 1.6rem; }
+
+/* ---------------------------------------------------------------- passos */
+.passos { display: grid; gap: clamp(1.2rem, 2.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 2.4rem; }
+.passo { border-top: 1px solid rgba(250,249,246,.22); padding-top: 1.2rem; }
+.passo__n {
+  display: block; font-family: var(--serif); font-size: 1.1rem;
+  color: rgba(250,249,246,.5); margin-bottom: .8rem;
+}
+.passo h3 { font-size: 1.18rem; margin-bottom: .5rem; }
+.passo p { font-size: .93rem; line-height: 1.65; }
+
+/* ---------------------------------------------------------------- cartas */
+.cartas { display: grid; gap: clamp(1rem, 2.2vw, 1.6rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.carta { background: var(--carta); border: 1px solid var(--borda); border-radius: var(--raio-g); padding: 1.6rem 1.5rem; }
+.carta h3 { font-size: 1.2rem; margin-bottom: .6rem; }
+.carta p { font-size: .93rem; color: var(--tinta-2); line-height: 1.65; }
+
+/* ----------------------------------------------------------------- faixa */
+.faixa {
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  border: 1px solid var(--borda); border-radius: var(--raio-g);
+  padding: clamp(1.8rem, 4vw, 3rem); background: var(--carta);
+}
+.faixa__texto { color: var(--tinta-2); margin-top: .9rem; max-width: 46ch; }
+.faixa__accoes { display: flex; gap: .7rem; flex-wrap: wrap; }
+
+/* ------------------------------------------------------------ duas colunas */
+.duas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.8rem, 4vw, 3.5rem); align-items: center; }
+.duas__foto img { border-radius: var(--raio-g); }
+@media (max-width: 900px) { .duas { grid-template-columns: 1fr; } }
+
+/* -------------------------------------------------------------- uma peça */
+.peca { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, .85fr); gap: clamp(1.6rem, 3.5vw, 3rem); align-items: start; }
+.peca__principal { border-radius: var(--raio-g); overflow: hidden; background: var(--papel-2); }
+.peca__principal img { width: 100%; height: auto; }
+.peca__mais { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .8rem; margin-top: .8rem; }
+.peca__extra { border-radius: var(--raio-g); overflow: hidden; background: var(--papel-2); }
+.peca__extra img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 3; }
+.peca__lado { position: sticky; top: calc(var(--h-topo) + 1rem); }
+.ficha { border: 1px solid var(--borda); border-radius: var(--raio-g); padding: clamp(1.4rem, 2.5vw, 2rem); background: var(--carta); }
+.ficha__titulo { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: .8rem; }
+.ficha__texto { color: var(--tinta-2); font-size: .97rem; }
+.ficha__detalhes { display: grid; gap: 0; margin: 1.4rem 0; }
+.ficha__detalhes > div { display: flex; justify-content: space-between; gap: 1rem; padding: .65rem 0; border-bottom: 1px solid var(--borda); }
+.ficha__detalhes dt { color: var(--tinta-2); font-size: .9rem; }
+.ficha__detalhes dd { font-weight: 600; font-size: .92rem; text-align: right; }
+.ficha__nota { font-size: .88rem; color: var(--tinta-2); background: var(--papel-2); padding: .8rem .9rem; border-radius: var(--raio); margin-top: 1.2rem; }
+.ficha__accoes { display: grid; gap: .55rem; margin-top: 1.2rem; }
+.ficha__accoes .btn { width: 100%; }
+.ficha__tel { margin-top: 1rem; text-align: center; }
+.secao__relacionadas { margin-top: clamp(3rem, 7vw, 5rem); }
+.secao__relacionadas .h-secao { margin-bottom: 1.8rem; }
+@media (max-width: 980px) {
+  .peca { grid-template-columns: 1fr; }
+  .peca__lado { position: static; }
+}
+
+/* --------------------------------------------------------------- telefone */
+.tel { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; }
+.tel svg { width: 17px; height: 17px; color: var(--tinta-3); }
+.tel:hover { color: var(--petroleo); }
+/* A lei obriga a indicar o custo da chamada em todo o lado onde apareça um
+   número. Nunca abaixo de 11 px, senão não se lê. */
+.nota-chamada { display: block; font-size: .72rem; color: var(--tinta-3); margin-top: .25rem; }
+
+/* ------------------------------------------------------- painel de contacto */
+.painel-contacto {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  border: 1px solid var(--borda); border-radius: var(--raio-g); overflow: hidden; background: var(--carta);
+}
+.painel-contacto__info { padding: clamp(1.6rem, 3.5vw, 3rem); }
+.painel-contacto__mapa { position: relative; min-height: 420px; }
+.painel-contacto__mapa .mapa { position: absolute; inset: 0; }
+.contacto__lista { display: grid; gap: 1.1rem; margin: 2rem 0; }
+.contacto__lista li { display: flex; gap: .8rem; align-items: flex-start; }
+.contacto__lista svg { width: 19px; height: 19px; color: var(--petroleo); flex: none; margin-top: .2rem; }
+.contacto__lista small { display: block; font-size: .8rem; color: var(--tinta-3); margin-top: .1rem; }
+.contacto__lista a:hover { color: var(--petroleo); }
+@media (max-width: 900px) {
+  .painel-contacto { grid-template-columns: 1fr; }
+  .painel-contacto__mapa { min-height: 0; aspect-ratio: 4 / 3; }
+}
+
+.mapa { background: var(--papel-2); position: relative; }
+.mapa iframe { width: 100%; height: 100%; border: 0; display: block; }
+.mapa__aviso { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; padding: 2rem 1.5rem; }
+.mapa__aviso svg { width: 34px; height: 34px; color: var(--petroleo); margin-bottom: .8rem; }
+.mapa__aviso p { font-size: .9rem; color: var(--tinta-2); max-width: 40ch; margin-bottom: 1.2rem; }
+.mapa__botoes { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+
+/* ------------------------------------------------------------------ texto */
+.texto h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 1.2rem; }
+.texto h2 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; margin: 2.2rem 0 .7rem; }
+.texto h3 { font-size: 1.05rem; font-weight: 700; margin: 1.6rem 0 .5rem; }
+.texto p, .texto li { color: var(--tinta-2); margin-bottom: .9rem; }
+.texto ul { margin: 0 0 1.2rem 1.1rem; list-style: disc; }
+.texto li { margin-bottom: .4rem; }
+.texto a { color: var(--petroleo); text-decoration: underline; text-underline-offset: 2px; }
+.texto strong { color: var(--tinta); }
+.texto code { font-size: .9em; background: var(--papel-2); padding: .1rem .35rem; border-radius: var(--raio); }
+.actualizado { font-size: .84rem; color: var(--tinta-3); margin-bottom: 2rem; }
+
+/* ----------------------------------------------------------------- rodapé */
+/* Sem margem por cima: a secção que vem antes já traz o seu próprio
+   `padding-bottom`, e as duas somadas abriam um vazio de mais de 150 px. */
+.rodape { background: var(--tinta); color: rgba(250,249,246,.72); padding-top: clamp(3rem, 6vw, 4.5rem); }
+.rodape a { color: rgba(250,249,246,.72); }
+.rodape a:hover { color: #fff; }
+/* .55 e não .45: a .45 o contraste sobre a tinta era 4,3:1 e falhava o AA. */
+.rodape h2 { font-size: .72rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(250,249,246,.55); margin-bottom: 1.1rem; }
+.rodape__grelha { display: grid; grid-template-columns: 1.5fr 1fr 1.3fr; gap: clamp(1.8rem, 4vw, 3rem); padding-bottom: 2.8rem; }
+@media (max-width: 800px) { .rodape__grelha { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .rodape__grelha { grid-template-columns: 1fr; } }
+.rodape__marca { height: 92px; width: auto; }
+.rodape__texto { margin-top: 1.1rem; font-size: .9rem; max-width: 34ch; }
+.rodape__redes { display: flex; gap: .6rem; margin-top: 1.4rem; }
+.rodape__rede {
+  width: 42px; height: 42px; display: grid; place-items: center; border-radius: var(--raio);
+  border: 1px solid rgba(250,249,246,.2); transition: background var(--t), border-color var(--t);
+}
+.rodape__rede:hover { background: rgba(250,249,246,.1); border-color: rgba(250,249,246,.45); }
+.rodape__rede svg { width: 19px; height: 19px; color: var(--papel); }
+.rodape__lista { display: grid; gap: .6rem; font-size: .92rem; }
+.rodape__contactos li { display: flex; gap: .7rem; align-items: flex-start; }
+.rodape__contactos svg { width: 17px; height: 17px; color: rgba(250,249,246,.5); flex: none; margin-top: .25rem; }
+.rodape__contactos small { display: block; font-size: .76rem; color: rgba(250,249,246,.5); }
+.rodape__legal {
+  border-top: 1px solid rgba(250,249,246,.15); padding: 1.4rem 0 2.2rem;
+  display: flex; flex-wrap: wrap; gap: .7rem 1.6rem; align-items: center; justify-content: space-between;
+  font-size: .84rem;
+}
+.rodape__links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+
+/* ---------------------------------------------------- voltar ao topo */
+.subir {
+  position: fixed; right: var(--gutter); bottom: max(var(--gutter), 1rem); z-index: 50;
+  width: 46px; height: 46px; display: grid; place-items: center; cursor: pointer;
+  background: var(--carta); border: 1px solid var(--borda-forte); border-radius: 50%;
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: opacity var(--t), transform var(--t), visibility var(--t), border-color var(--t);
+}
+.subir--dentro { opacity: 1; visibility: visible; transform: none; }
+.subir:hover { border-color: var(--tinta); }
+.subir svg { width: 19px; height: 19px; }
+
+/* ============================================================================
+   MELHORIAS PROGRESSIVAS
+   Tudo o que está abaixo é dispensável: se o browser não souber, o site
+   funciona na mesma. É essa a condição para poder usar coisas recentes.
+   ========================================================================== */
+
+/* ---- entrada das peças conduzida pelo scroll, sem JavaScript nenhum.
+   Só com `prefers-reduced-motion: no-preference`, e dentro de `@supports`
+   porque a duração NÃO desliga uma animação de linha temporal de progresso —
+   o `animation-duration: .01ms` do reset acima não tem efeito nestas. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* NÃO acrescentar aqui `.montra .grelha__item`. Medido no Chromium: um
+       `animation-timeline: view()` num filho de contentor multicoluna colapsa
+       as três colunas numa só — as peças passaram todas para x=121 e a montra
+       ficou com 4378 px de altura em vez de ~1460. Sem o `animation-timeline`,
+       as colunas voltam a x=121/525/929. A montra fica sem entrada animada, e
+       é o preço certo: uma montra em coluna única não é uma montra. */
+    .grelha > .cartao, .carta, .passo {
+      animation: surgir linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 22%;
+    }
+    @keyframes surgir {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+  }
+}
+
+/* ---- transições entre páginas. A fotografia da peça na montra e a da página
+   da peça partilham o mesmo `view-transition-name`, por isso o browser liga uma
+   à outra e a imagem cresce em vez de haver um salto branco. Onde não houver
+   suporte — Firefox, por agora — navega-se normalmente.
+
+   A opção vive aqui, na regra `@view-transition`, e não numa `<meta>`: a meta
+   `view-transition` foi a forma provisória de o Chrome ligar isto durante o
+   desenvolvimento da especificação e já não faz nada. Deixá-la no HTML dava a
+   impressão de estar tratado sem estar. */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .32s; }
+
+/* ---- só desenha o que está perto do ecrã. Com 26 peças e 66 fotografias, o
+   trabalho de layout que se poupa é real. O `contain-intrinsic-size` evita que
+   a barra de scroll salte enquanto o conteúdo ainda não foi medido. */
+.secao--tenue, .secao--escura, .secao__relacionadas {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}

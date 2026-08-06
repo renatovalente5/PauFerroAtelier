@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-jantar-rio-esmeralda-pes-dourados",
+  "conjunto": 8,
+  "nome": "Mesa de jantar com rio esmeralda",
+  "categoria": "mesa-jantar",
+  "resina": "esmeralda",
+  "descricao": "Rio de resina verde esmeralda entre duas abas de borda natural, sobre pés em X dourados.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 8,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1791
+    ],
+    "02": [
+      1440,
+      1791
+    ]
+  }
+}

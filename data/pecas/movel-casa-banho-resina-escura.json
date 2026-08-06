@@ -1,0 +1,37 @@
+{
+  "slug": "movel-casa-banho-resina-escura",
+  "conjunto": 26,
+  "nome": "Móvel de casa de banho",
+  "categoria": "casa-de-banho",
+  "resina": "preta",
+  "descricao": "Móvel suspenso com frentes em madeira e resina escura, com lavatório integrado.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 26,
+  "fotos": [
+    "01",
+    "02",
+    "03",
+    "04"
+  ],
+  "dimensoes": {
+    "01": [
+      1536,
+      2048
+    ],
+    "02": [
+      1600,
+      1200
+    ],
+    "03": [
+      1536,
+      2048
+    ],
+    "04": [
+      1600,
+      1200
+    ]
+  }
+}

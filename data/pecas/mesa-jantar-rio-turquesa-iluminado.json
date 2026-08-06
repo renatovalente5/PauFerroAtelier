@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-rio-turquesa-iluminado",
+  "conjunto": 5,
+  "nome": "Mesa de jantar com rio turquesa iluminado",
+  "categoria": "mesa-jantar",
+  "resina": "turquesa",
+  "descricao": "Rio de resina turquesa com iluminação embutida, que acende por baixo da resina.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 5,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1080
+    ],
+    "02": [
+      1440,
+      1080
+    ],
+    "03": [
+      1440,
+      1080
+    ]
+  }
+}

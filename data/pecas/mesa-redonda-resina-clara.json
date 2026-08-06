@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-redonda-resina-clara",
+  "conjunto": 25,
+  "nome": "Mesa redonda com resina clara",
+  "categoria": "mesa-redonda",
+  "resina": "clara",
+  "descricao": "Tampo redondo com veios de resina clara, sobre pé central metálico.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 25,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1600,
+      1200
+    ],
+    "02": [
+      1600,
+      1200
+    ]
+  }
+}

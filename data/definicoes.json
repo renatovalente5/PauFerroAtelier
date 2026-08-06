@@ -1,0 +1,32 @@
+{
+  "empresa": {
+    "nome": "Pau Ferro Atelier",
+    "nif": "247898511",
+    "actividade": "Mesas em madeira maciça e resina epóxi, por medida"
+  },
+  "contactos": {
+    "telefone": "925110570",
+    "telefone_texto": "925 110 570",
+    "whatsapp": "351925110570",
+    "email": "geralpauferro@outlook.pt"
+  },
+  "local": {
+    "localidade": "Valongo",
+    "distrito": "Porto",
+    "pais": "Portugal",
+    "latitude": 41.1868,
+    "longitude": -8.4977,
+    "nota": "O atelier recebe por marcação. A morada é combinada directamente com o cliente."
+  },
+  "redes": {
+    "instagram": "https://www.instagram.com/pauferro_2021",
+    "facebook": "https://www.facebook.com/profile.php?id=100064370160594"
+  },
+  "textos": {
+    "reclamo": "Atelier de marcenaria em Valongo, Porto",
+    "hero_titulo": "Mesas em madeira maciça e resina epóxi, feitas à medida.",
+    "hero_texto": "Cada peça é única e fabricada por encomenda, a partir da madeira escolhida para si.",
+    "sobre_titulo": "Um atelier jovem, a trabalhar madeira com métodos novos",
+    "sobre_texto": "O Pau Ferro Atelier nasceu com a intenção de recriar produtos através de novos processos e materiais, como a resina epóxi. Trabalhamos madeira maciça e resina para fazer peças que não existem em mais lado nenhum — porque cada tábua tem o seu desenho, e é esse desenho que manda no resultado."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-jantar-longa-rio-turquesa",
+  "conjunto": 13,
+  "nome": "Mesa de jantar longa com rio turquesa",
+  "categoria": "mesa-jantar",
+  "resina": "turquesa",
+  "descricao": "Tampo longo de borda natural com um rio de resina turquesa a toda a extensão.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 13,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1200,
+      900
+    ],
+    "02": [
+      1200,
+      900
+    ]
+  }
+}

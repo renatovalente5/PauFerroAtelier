@@ -1,0 +1,37 @@
+{
+  "slug": "tampo-macico-grande-formato",
+  "conjunto": 2,
+  "nome": "Tampo maciço de grande formato",
+  "categoria": "mesa-jantar",
+  "resina": "",
+  "descricao": "Tampo de grande formato em madeira maciça, ainda em oficina, antes do acabamento final.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 2,
+  "fotos": [
+    "01",
+    "02",
+    "03",
+    "04"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1080
+    ],
+    "02": [
+      1440,
+      1080
+    ],
+    "03": [
+      1440,
+      1080
+    ],
+    "04": [
+      1440,
+      1080
+    ]
+  }
+}

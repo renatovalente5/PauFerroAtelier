@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-rio-escuro-borda-natural",
+  "conjunto": 6,
+  "nome": "Mesa de jantar com rio escuro",
+  "categoria": "mesa-jantar",
+  "resina": "preta",
+  "descricao": "Tampo de borda natural com rio de resina escura e pés metálicos.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 6,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1200,
+      1600
+    ],
+    "02": [
+      1200,
+      1600
+    ],
+    "03": [
+      1200,
+      1600
+    ]
+  }
+}

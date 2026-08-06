@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-resina-translucida",
+  "conjunto": 18,
+  "nome": "Mesa de jantar com resina translúcida",
+  "categoria": "mesa-jantar",
+  "resina": "clara",
+  "descricao": "Resina translúcida a preencher o vão entre as duas abas, deixando ver o contorno da madeira.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 18,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1080
+    ],
+    "02": [
+      1440,
+      1083
+    ],
+    "03": [
+      1440,
+      1080
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "louceiro-madeira-macica",
+  "conjunto": 16,
+  "nome": "Louceiro em madeira maciça",
+  "categoria": "movel",
+  "resina": "",
+  "descricao": "Móvel de arrumação em madeira maciça, com portas envidraçadas e gavetas. Marcenaria tradicional, sem resina.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 16,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ],
+    "02": [
+      1440,
+      1800
+    ]
+  }
+}

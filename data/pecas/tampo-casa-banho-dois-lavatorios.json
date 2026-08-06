@@ -1,0 +1,32 @@
+{
+  "slug": "tampo-casa-banho-dois-lavatorios",
+  "conjunto": 23,
+  "nome": "Tampo de casa de banho",
+  "categoria": "casa-de-banho",
+  "resina": "",
+  "descricao": "Tampo de madeira maciça para dois lavatórios de pousar, tratado para ambiente húmido.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 23,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1080
+    ],
+    "02": [
+      1440,
+      1080
+    ],
+    "03": [
+      1440,
+      1080
+    ]
+  }
+}

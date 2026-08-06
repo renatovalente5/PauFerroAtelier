@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-tampo-claro",
+  "conjunto": 7,
+  "nome": "Mesa de jantar de tampo claro",
+  "categoria": "mesa-jantar",
+  "resina": "clara",
+  "descricao": "Madeira clara com veio de resina translúcida, sobre pernas metálicas rectas.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 7,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      810
+    ],
+    "02": [
+      1440,
+      810
+    ],
+    "03": [
+      1440,
+      810
+    ]
+  }
+}

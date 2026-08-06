@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-jantar-rio-azul",
+  "conjunto": 4,
+  "nome": "Mesa de jantar com rio azul",
+  "categoria": "mesa-jantar",
+  "resina": "azul",
+  "descricao": "Rio de resina azul a percorrer o tampo de ponta a ponta, com os nós da madeira à vista.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 4,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1920
+    ],
+    "02": [
+      1440,
+      1920
+    ]
+  }
+}

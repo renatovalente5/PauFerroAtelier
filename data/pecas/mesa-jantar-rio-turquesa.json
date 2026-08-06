@@ -1,0 +1,22 @@
+{
+  "slug": "mesa-jantar-rio-turquesa",
+  "conjunto": 11,
+  "nome": "Mesa de jantar com rio turquesa",
+  "categoria": "mesa-jantar",
+  "resina": "turquesa",
+  "descricao": "Rio de resina turquesa iluminado, num tampo de borda natural.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 11,
+  "fotos": [
+    "01"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ]
+  }
+}

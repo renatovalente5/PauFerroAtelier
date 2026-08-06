@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-jantar-veio-central-carvalho",
+  "conjunto": 1,
+  "nome": "Mesa de jantar com veio central",
+  "categoria": "mesa-jantar",
+  "resina": "clara",
+  "descricao": "Tampo de madeira maciça atravessado por um veio de resina, sobre pés metálicos em V.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 1,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1600,
+      1200
+    ],
+    "02": [
+      1600,
+      1204
+    ],
+    "03": [
+      1600,
+      1200
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "aparador-resina-verde",
+  "conjunto": 20,
+  "nome": "Aparador com resina verde",
+  "categoria": "aparador",
+  "resina": "esmeralda",
+  "descricao": "Aparador de madeira maciça com uma faixa de resina verde a atravessar as portas e o tampo.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 20,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ],
+    "02": [
+      1440,
+      1800
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "mesa-jantar-madeira-escura",
+  "conjunto": 15,
+  "nome": "Mesa de jantar em madeira escura",
+  "categoria": "mesa-jantar",
+  "resina": "preta",
+  "descricao": "Tampo de tom escuro com veio de resina e pés metálicos.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 15,
+  "fotos": [
+    "01",
+    "02",
+    "03",
+    "04"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1791
+    ],
+    "02": [
+      1440,
+      1800
+    ],
+    "03": [
+      1440,
+      1791
+    ],
+    "04": [
+      1440,
+      1800
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-jantar-rio-verde-azulado",
+  "conjunto": 12,
+  "nome": "Mesa de jantar com rio verde-azulado",
+  "categoria": "mesa-jantar",
+  "resina": "esmeralda",
+  "descricao": "Rio de resina entre verde e azul, num tampo com nós e fendas preenchidas.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 12,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ],
+    "02": [
+      1440,
+      1800
+    ]
+  }
+}

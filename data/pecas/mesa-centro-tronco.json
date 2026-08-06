@@ -1,0 +1,32 @@
+{
+  "slug": "mesa-centro-tronco",
+  "conjunto": 9,
+  "nome": "Mesa de centro em tronco",
+  "categoria": "mesa-centro",
+  "resina": "",
+  "descricao": "Peça baixa feita de uma secção de tronco, com o contorno natural mantido.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 9,
+  "fotos": [
+    "01",
+    "02",
+    "03"
+  ],
+  "dimensoes": {
+    "01": [
+      1200,
+      1500
+    ],
+    "02": [
+      1440,
+      1800
+    ],
+    "03": [
+      1440,
+      1800
+    ]
+  }
+}

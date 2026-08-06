@@ -1,0 +1,27 @@
+{
+  "slug": "mesa-redonda-rio-preto",
+  "conjunto": 24,
+  "nome": "Mesa redonda com rio preto",
+  "categoria": "mesa-redonda",
+  "resina": "preta",
+  "descricao": "Tampo redondo dividido por veios de resina preta que seguem o desenho da madeira.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": true,
+  "publicado": true,
+  "ordem": 24,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "dimensoes": {
+    "01": [
+      1440,
+      1800
+    ],
+    "02": [
+      1440,
+      1800
+    ]
+  }
+}
