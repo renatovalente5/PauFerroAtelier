@@ -148,8 +148,12 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 }
 .topo--encolhido .topo__barra { height: 78px; }
 .marca { flex: none; margin-right: auto; }
-.marca img { height: 76px; width: auto; transition: height var(--t); }
-.topo--encolhido .marca img { height: 46px; }
+/* A altura da barra fica como está; só o logótipo cresce dentro dela. O tecto
+   é o espaço livre acima e abaixo: o desenho já vem sem margem branca — foi
+   recortada em `scripts/logotipo.py` —, por isso a 86 px sobram 15 px de cada
+   lado numa barra de 116, que é o mínimo antes de parecer entalado. */
+.marca img { height: 86px; width: auto; transition: height var(--t); }
+.topo--encolhido .marca img { height: 52px; }
 
 .topo__nav { display: flex; align-items: center; gap: 2rem; }
 .topo__link {
@@ -188,8 +192,8 @@ body.menu-aberto .hamburger span::after { top: 0; transform: rotate(-45deg); }
   .hamburger { display: flex; }
   .topo__barra { height: 84px; }
   .topo--encolhido .topo__barra { height: 64px; }
-  .marca img { height: 54px; }
-  .topo--encolhido .marca img { height: 38px; }
+  .marca img { height: 62px; }
+  .topo--encolhido .marca img { height: 44px; }
   /* O bloqueio do scroll vive na media query para se libertar sozinho se a
      janela crescer com o menu aberto — não depende de nenhum evento. */
   body.menu-aberto { overflow: hidden; }
