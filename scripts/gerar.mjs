@@ -257,6 +257,7 @@ function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = 
 <meta property="og:image:type" content="image/jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1C1A18">
+${dominio ? '' : '<!-- Enquanto o atelier não tiver domínio, o site vive num endereço\n     provisório do GitHub. Deixá-lo indexar punha o Google a guardar o\n     endereço errado, e depois havia que o desfazer. Basta escrever o\n     ficheiro CNAME para esta linha desaparecer sozinha. -->\n<meta name="robots" content="noindex, nofollow">'}
 <link rel="icon" href="${u('assets/img/favicon-32.png')}" sizes="32x32" type="image/png">
 <link rel="icon" href="${u('assets/img/favicon-96.png')}" sizes="96x96" type="image/png">
 <link rel="apple-touch-icon" href="${u('assets/img/apple-touch-icon.png')}">
@@ -763,7 +764,9 @@ function main() {
 ${urls.map((p) => `  <url><loc>${abs(p)}</loc><lastmod>${hoje}</lastmod></url>`).join('\n')}
 </urlset>
 `);
-  escrever('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${abs('sitemap.xml')}\n`);
+  escrever('robots.txt', dominio
+    ? `User-agent: *\nAllow: /\n\nSitemap: ${abs('sitemap.xml')}\n`
+    : `# Endereço provisório, sem domínio próprio ainda. Não indexar.\nUser-agent: *\nDisallow: /\n`);
 
   console.log('gerado em _site/');
   console.log(`  ${pecas.length} peças`);

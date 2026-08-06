@@ -150,6 +150,17 @@ for (const f of paginas) {
   if (/Capital social|capital social/.test(h)) mal(rel(f), 'menciona capital social (o cliente é em nome individual)');
 }
 
+/* 10b. indexação: só quando houver domínio próprio. A regra e a verificação
+        saem do mesmo facto, por isso não podem discordar. */
+const temDominio = existsSync(join(SAIDA, 'CNAME'));
+const robots = readFileSync(join(SAIDA, 'robots.txt'), 'utf8');
+for (const f of paginas) {
+  const noindex = /<meta name="robots" content="noindex/.test(readFileSync(f, 'utf8'));
+  if (temDominio && noindex) mal(rel(f), 'tem noindex apesar de haver domínio próprio');
+  if (!temDominio && !noindex) mal(rel(f), 'sem noindex, e o site ainda está no endereço provisório');
+}
+if (temDominio !== robots.includes('Allow: /')) mal('robots.txt', 'não condiz com a existência de domínio');
+
 /* 11. o sitemap cobre todas as páginas e nada a mais */
 const mapa = readFileSync(join(SAIDA, 'sitemap.xml'), 'utf8');
 const noMapa = [...mapa.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, v]) => new URL(v).pathname.slice(PREFIXO.length));
