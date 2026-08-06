@@ -1,7 +1,7 @@
 {
   "slug": "mesa-jantar-borda-natural-macica",
   "conjunto": 14,
-  "nome": "Mesa de jantar de borda natural",
+  "nome": "Mesa de borda natural em madeira maciça",
   "categoria": "mesa-jantar",
   "resina": "",
   "descricao": "Tampo maciço com as duas bordas naturais preservadas e a superfície polida.",
@@ -15,6 +15,14 @@
     "02",
     "03"
   ],
+  "cortes": {
+    "02": [
+      0.0,
+      0.2,
+      1.0,
+      0.94
+    ]
+  },
   "dimensoes": {
     "01": [
       1440,
@@ -22,7 +30,7 @@
     ],
     "02": [
       1440,
-      1080
+      799
     ],
     "03": [
       1440,

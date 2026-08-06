@@ -20,8 +20,18 @@ O `<picture>` do gerador oferece-os por esta ordem e o browser escolhe o
 primeiro que souber ler. Quem não souber nenhum dos dois primeiros recebe JPEG,
 que qualquer coisa lê.
 
-Correr:  python3 scripts/imagens.py            (só o que falta)
-         python3 scripts/imagens.py --tudo     (refaz tudo)
+Cortes: algumas fotografias foram tiradas com muito tecto ou muita parede e a
+peça fica pequena no meio do nada. Quando isso acontece, o corte fica escrito no
+JSON da peça, em `cortes`, como fracções da imagem original:
+
+    "cortes": { "01": [0.0, 0.24, 1.0, 1.0] }
+
+O original **nunca é alterado** — o corte é aplicado aqui, na geração. Assim
+qualquer corte se desfaz apagando uma linha, e vê-se sempre o que foi mexido.
+
+Correr:  python3 scripts/imagens.py                  (só o que falta)
+         python3 scripts/imagens.py --tudo           (refaz tudo)
+         python3 scripts/imagens.py --peca <slug>    (refaz só estas peças)
 """
 import json
 import re
@@ -45,6 +55,11 @@ QUALIDADE = {'AVIF': 52, 'WEBP': 78, 'JPEG': 82}
 OG = (1200, 630)
 
 TUDO = '--tudo' in sys.argv
+# --peca <slug> [<slug> ...] força a regeneração dessas peças, que é o que é
+# preciso depois de mudar um corte: os ficheiros já existem e seriam saltados.
+SO_ESTAS = set()
+if '--peca' in sys.argv:
+    SO_ESTAS = {a for a in sys.argv[sys.argv.index('--peca') + 1:] if not a.startswith('--')}
 
 
 def carregar(caminho: Path) -> Image.Image:
@@ -54,7 +69,16 @@ def carregar(caminho: Path) -> Image.Image:
     return ImageOps.exif_transpose(im).convert('RGB')
 
 
-def variantes(im: Image.Image, pasta: Path, base: str) -> int:
+def recortar(im: Image.Image, caixa) -> Image.Image:
+    """Aplica um corte dado em fracções [x0, y0, x1, y1] da imagem."""
+    if not caixa:
+        return im
+    x0, y0, x1, y1 = caixa
+    return im.crop((round(x0 * im.width), round(y0 * im.height),
+                    round(x1 * im.width), round(y1 * im.height)))
+
+
+def variantes(im: Image.Image, pasta: Path, base: str, refazer: bool) -> int:
     feitas = 0
     for w in LARGURAS:
         escala = im.copy()
@@ -62,7 +86,7 @@ def variantes(im: Image.Image, pasta: Path, base: str) -> int:
             escala.thumbnail((w, w * 10), Image.LANCZOS)
         for fmt, ext in (('AVIF', 'avif'), ('WEBP', 'webp'), ('JPEG', 'jpg')):
             saida = pasta / f'{base}-{w}.{ext}'
-            if saida.exists() and not TUDO:
+            if saida.exists() and not TUDO and not refazer:
                 continue
             escala.save(saida, fmt, quality=QUALIDADE[fmt], **({'method': 6} if fmt == 'WEBP' else {}))
             feitas += 1
@@ -92,11 +116,12 @@ def main():
 
     # O slug de cada peça vem dos dados, se já existirem; senão é o número. Isto
     # deixa renomear as peças mais tarde sem refazer as imagens à mão.
-    slugs = {}
+    slugs, cortes = {}, {}
     for j in PECAS.glob('*.json'):
         d = json.loads(j.read_text(encoding='utf-8'))
         if d.get('conjunto'):
             slugs[int(d['conjunto'])] = d['slug']
+            cortes[int(d['conjunto'])] = d.get('cortes') or {}
 
     total = 0
     for n in sorted(conjuntos):
@@ -104,12 +129,19 @@ def main():
         pasta = DESTINO / slug
         pasta.mkdir(parents=True, exist_ok=True)
         fotos = sorted(conjuntos[n])
+        refazer = slug in SO_ESTAS
+        cortados = []
         for i, (_, f) in enumerate(fotos, 1):
-            im = carregar(f)
-            total += variantes(im, pasta, f'{i:02d}')
-            if i == 1:
+            num = f'{i:02d}'
+            caixa = cortes.get(n, {}).get(num)
+            im = recortar(carregar(f), caixa)
+            if caixa:
+                cortados.append(num)
+            total += variantes(im, pasta, num, refazer)
+            if i == 1 and (refazer or not (pasta / 'og.jpg').exists() or TUDO):
                 cartao_partilha(im, pasta)
-        print(f'  {slug}: {len(fotos)} fotografias')
+        nota = f'  (corte em {", ".join(cortados)})' if cortados else ''
+        print(f'  {slug}: {len(fotos)} fotografias{nota}')
 
     print(f'\n{len(conjuntos)} peças · {total} ficheiros novos')
 

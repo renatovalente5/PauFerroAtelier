@@ -70,10 +70,24 @@ fotografias (79 % madeira quente, o resto resina azul, turquesa e verde), e a
 decisão foi deixar o site monocromático como o logótipo e **dar a cor às
 fotografias**. Competir com a madeira era ruído.
 
-**A montra em colunas e não em grelha.** 16 peças foram fotografadas ao alto e 10
-ao baixo. Uma grelha alinha tudo pela mais alta e obriga a cortar; em colunas,
-cada fotografia aparece inteira. As medidas de cada uma são lidas do ficheiro,
-não assumidas.
+**A montra em colunas e não em grelha.** As peças foram fotografadas umas ao alto
+e outras ao baixo. Uma grelha alinha tudo pela mais alta e obriga a cortar; em
+colunas, cada fotografia aparece inteira. As medidas de cada uma são lidas do
+ficheiro, não assumidas.
+
+**Os cortes vivem nos dados, não nos originais.** Várias fotografias foram
+tiradas com muito tecto ou muita parede e a peça ficava pequena no meio do nada.
+Quando isso acontece, o corte fica escrito no JSON da peça:
+
+```json
+"cortes": { "01": [0.0, 0.38, 1.0, 1.0] }
+```
+
+São fracções da imagem, com 0,0 no canto superior esquerdo. O ficheiro original
+**nunca é alterado** — o corte é aplicado na geração das variantes. Desfaz-se
+apagando a linha e correndo `python3 scripts/imagens.py --peca <slug>`. Depois de
+mexer num corte é preciso correr também `scripts/dimensoes.py`, senão o HTML fica
+a declarar a proporção antiga e a página salta ao carregar.
 
 **Sem preços.** As peças são por encomenda. Não há `offers` nos dados
 estruturados por causa disso — marcar um preço que não está visível na página é

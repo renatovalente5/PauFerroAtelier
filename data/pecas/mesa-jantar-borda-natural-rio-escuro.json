@@ -1,7 +1,7 @@
 {
   "slug": "mesa-jantar-borda-natural-rio-escuro",
   "conjunto": 3,
-  "nome": "Mesa de jantar de borda natural",
+  "nome": "Mesa de borda natural com rio escuro",
   "categoria": "mesa-jantar",
   "resina": "preta",
   "descricao": "Duas abas de borda natural unidas por um rio de resina escura, que segue o contorno irregular da madeira.",
@@ -14,10 +14,18 @@
     "01",
     "02"
   ],
+  "cortes": {
+    "01": [
+      0.0,
+      0.38,
+      1.0,
+      1.0
+    ]
+  },
   "dimensoes": {
     "01": [
       1148,
-      1530
+      949
     ],
     "02": [
       1148,

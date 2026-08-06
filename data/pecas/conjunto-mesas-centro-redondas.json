@@ -1,0 +1,35 @@
+{
+  "slug": "conjunto-mesas-centro-redondas",
+  "conjunto": 22,
+  "nome": "Conjunto de mesas de centro",
+  "categoria": "mesa-centro",
+  "resina": "preta",
+  "descricao": "Três mesas redondas de alturas e diâmetros diferentes, com tampos de madeira e resina e estruturas metálicas em tom dourado.",
+  "madeira": "",
+  "medidas": "",
+  "destaque": false,
+  "publicado": true,
+  "ordem": 22,
+  "fotos": [
+    "01",
+    "02"
+  ],
+  "cortes": {
+    "01": [
+      0.05,
+      0.21,
+      1.0,
+      0.87
+    ]
+  },
+  "dimensoes": {
+    "01": [
+      1368,
+      951
+    ],
+    "02": [
+      1440,
+      1440
+    ]
+  }
+}

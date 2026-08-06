@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SAIDA = join(RAIZ, '_site');
+const RAIZ_PROJ = RAIZ;
 const problemas = [];
 const avisos = [];
 const mal = (f, m) => problemas.push(`${f}: ${m}`);
@@ -30,10 +31,14 @@ function todos(dir, ext, lista = []) {
 const paginas = todos(SAIDA, '.html');
 const rel = (p) => p.slice(SAIDA.length);
 
-/* O prefixo esperado sai do mesmo facto que o gerador usa: existe CNAME ou não.
-   Esta é a verificação que teria apanhado, em minutos, o site que esteve dias
-   sem CSS por ter sido construído para um subdirectório e servido na raiz. */
-const PREFIXO = existsSync(join(SAIDA, 'CNAME')) ? '' : '/PauFerroAtelier';
+/* O prefixo esperado sai exactamente da mesma regra do gerador — incluindo a
+   possibilidade de ser imposto pelo ambiente, que é como se constrói para o
+   servidor local. Se esta linha se afastar da do gerador, a auditoria passa a
+   verificar uma coisa diferente da que foi construída, e deixa de servir para
+   nada. Esta é a verificação que teria apanhado, em minutos, o site que esteve
+   dias sem CSS por ter sido construído para um subdirectório e servido na raiz. */
+const PREFIXO = (process.env.BASE ?? (existsSync(join(SAIDA, 'CNAME')) ? '' : '/PauFerroAtelier'))
+  .replace(/\/$/, '');
 
 /* O próprio domínio aparece nos canónicos e nos Open Graph, que têm de ser
    absolutos. Sai do mesmo sítio de onde o gerador o tira — o CNAME —, para a
@@ -148,6 +153,30 @@ for (const f of paginas) {
     if (!h.includes(t)) mal(rel(f), `o rodapé não tem a ligação "${t}"`);
   }
   if (/Capital social|capital social/.test(h)) mal(rel(f), 'menciona capital social (o cliente é em nome individual)');
+}
+
+/* 10a. os dados das peças, antes de olhar para o HTML.
+
+       Nomes repetidos passam despercebidos: duas peças diferentes com o mesmo
+       nome ficam indistinguíveis na montra, e o Google vê dois títulos iguais
+       em duas páginas — que é ele próprio a escolher qual ignorar. Aconteceu
+       com sete das 26 peças. */
+{
+  const CATS = ['mesa-jantar', 'mesa-redonda', 'mesa-centro', 'mesa-apoio', 'aparador', 'casa-de-banho', 'movel'];
+  const vistos = new Map();
+  for (const f of readdirSync(join(RAIZ_PROJ, 'data/pecas')).filter((x) => x.endsWith('.json'))) {
+    const peca = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/pecas', f), 'utf8'));
+    if (`${peca.slug}.json` !== f) mal(`data/pecas/${f}`, `o slug diz "${peca.slug}" e o ficheiro chama-se outra coisa`);
+    if (!CATS.includes(peca.categoria)) mal(`data/pecas/${f}`, `categoria desconhecida: ${peca.categoria}`);
+    const chave = peca.nome.toLowerCase();
+    if (vistos.has(chave)) mal(`data/pecas/${f}`, `o nome "${peca.nome}" já é usado por ${vistos.get(chave)}`);
+    else vistos.set(chave, peca.slug);
+    for (const n of peca.fotos) {
+      if (!existsSync(join(RAIZ_PROJ, `assets/pecas/${peca.slug}/${n}-1600.jpg`))) {
+        mal(`data/pecas/${f}`, `a fotografia ${n} não existe em assets/pecas/${peca.slug}/`);
+      }
+    }
+  }
 }
 
 /* 10b. indexação: só quando houver domínio próprio. A regra e a verificação

@@ -1,7 +1,7 @@
 {
   "slug": "mesa-jantar-rio-escuro-espaco-comercial",
   "conjunto": 21,
-  "nome": "Mesa de jantar com rio escuro",
+  "nome": "Mesa de rio escuro para quatro lugares",
   "categoria": "mesa-jantar",
   "resina": "preta",
   "descricao": "Tampo de borda natural com rio de resina escura, num espaço comercial.",
@@ -14,10 +14,18 @@
     "01",
     "02"
   ],
+  "cortes": {
+    "01": [
+      0.12,
+      0.4,
+      0.88,
+      1.0
+    ]
+  },
   "dimensoes": {
     "01": [
-      1440,
-      1196
+      1094,
+      718
     ],
     "02": [
       1440,

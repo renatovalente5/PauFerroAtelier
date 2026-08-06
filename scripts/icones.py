@@ -56,9 +56,12 @@ foto = Image.open(RAIZ / 'assets/pecas/mesa-jantar-rio-azul/01-1600.jpg').conver
 alvo = (1200, 630)
 r = max(alvo[0] / foto.width, alvo[1] / foto.height)
 foto = foto.resize((round(foto.width * r), round(foto.height * r)), Image.LANCZOS)
-# recorta pelo terço superior: é onde está o tampo, e não o chão
+# Recorta em cima e não ao centro: o que interessa na pré-visualização é o
+# tampo com o rio de resina, não o tapete. A fracção é baixa porque a
+# fotografia de origem já vem cortada em `data/pecas` — se um dia se mexer
+# nesse corte, é preciso confirmar aqui outra vez.
 esq = (foto.width - alvo[0]) // 2
-topo = min(max(0, round(foto.height * 0.26)), foto.height - alvo[1])
+topo = min(max(0, round(foto.height * 0.12)), foto.height - alvo[1])
 og = foto.crop((esq, topo, esq + alvo[0], topo + alvo[1]))
 
 veu = Image.new('RGBA', alvo, (0, 0, 0, 0))
