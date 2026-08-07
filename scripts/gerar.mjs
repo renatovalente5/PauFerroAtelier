@@ -318,15 +318,29 @@ const migalhasLD = (itens) => ({
    Nas filas de apoio — os destaques da entrada, as "outras peças" — o corte a
    4:3 mantém-se, porque aí o que se quer é uma linha regular. */
 function cartaoPeca(p, i, { natural = false, nivel = 3, prioritarias = 0 } = {}) {
-  const n = p.fotos[0];
+  /* Duas afinações opcionais, e ambas só valem no cartão cortado a 4:3:
+
+     `cartao` escolhe outra fotografia. Serve para as peças cuja primeira
+     fotografia é larga de mais: cortada a 4:3 fica com a mesa em cima e meio
+     enquadramento de chão por baixo, e nesse formato não há posicionamento que
+     resolva — o corte é lateral, não vertical.
+
+     `foco` desloca o corte quando o centro não é o sítio certo.
+
+     Na montra nenhuma das duas se aplica: lá a fotografia aparece inteira. */
+  const n = natural ? p.fotos[0] : (p.cartao || p.fotos[0]);
   const [W, H] = dim(p, n);
   const sizes = natural
     ? '(max-width: 640px) 92vw, (max-width: 1040px) 46vw, 31vw'
     : '(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw';
+  const estilo = [
+    `view-transition-name: peca-${esc(p.slug)}`,
+    natural ? `aspect-ratio: ${W} / ${H}` : '',
+    !natural && p.foco ? `--foco: ${esc(p.foco)}` : '',
+  ].filter(Boolean).join('; ');
   return `<article class="cartao">
   <a class="cartao__link" href="${u('pecas/' + p.slug + '/')}">
-    <div class="cartao__foto${natural ? ' cartao__foto--natural' : ''}"
-         style="view-transition-name: peca-${esc(p.slug)}${natural ? `; aspect-ratio: ${W} / ${H}` : ''}">
+    <div class="cartao__foto${natural ? ' cartao__foto--natural' : ''}" style="${estilo}">
 <!-- alt vazio de propósito: o nome da peça está no título logo a seguir,
            dentro da mesma ligação. Com texto alternativo, um leitor de ecrã
            anunciava "Mesa de jantar com rio azul, Mesa de jantar com rio azul".

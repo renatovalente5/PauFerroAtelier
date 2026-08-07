@@ -146,14 +146,19 @@ button { font: inherit; color: inherit; background: none; border: 0; }
   height: 116px; display: flex; align-items: center; gap: 2rem;
   transition: height var(--t);
 }
-.topo--encolhido .topo__barra { height: 78px; }
+/* 84 e não 78: a barra encolhida tem de acomodar um logótipo de 62 px com
+   folga. A diferença para os 116 do estado normal continua a notar-se. */
+.topo--encolhido .topo__barra { height: 84px; }
 .marca { flex: none; margin-right: auto; }
-/* A altura da barra fica como está; só o logótipo cresce dentro dela. O tecto
-   é o espaço livre acima e abaixo: o desenho já vem sem margem branca — foi
-   recortada em `scripts/logotipo.py` —, por isso a 86 px sobram 15 px de cada
-   lado numa barra de 116, que é o mínimo antes de parecer entalado. */
-.marca img { height: 86px; width: auto; transition: height var(--t); }
-.topo--encolhido .marca img { height: 52px; }
+/* O logótipo vive dentro da barra e o tecto é o espaço livre acima e abaixo —
+   o desenho já vem sem margem branca, foi recortada em `scripts/logotipo.py`.
+   A 80 px numa barra de 116 sobram 18 px de cada lado.
+
+   Ao descer, encolhe pouco de propósito: 80 → 62, e não 80 → 52 como esteve.
+   Um logótipo que se reduz a metade dá a sensação de que a marca desaparece
+   assim que se começa a ler. */
+.marca img { height: 80px; width: auto; transition: height var(--t); }
+.topo--encolhido .marca img { height: 62px; }
 
 .topo__nav { display: flex; align-items: center; gap: 2rem; }
 .topo__link {
@@ -191,9 +196,9 @@ body.menu-aberto .hamburger span::after { top: 0; transform: rotate(-45deg); }
   .topo__nav, .topo__cta { display: none; }
   .hamburger { display: flex; }
   .topo__barra { height: 84px; }
-  .topo--encolhido .topo__barra { height: 64px; }
-  .marca img { height: 62px; }
-  .topo--encolhido .marca img { height: 44px; }
+  .topo--encolhido .topo__barra { height: 70px; }
+  .marca img { height: 58px; }
+  .topo--encolhido .marca img { height: 50px; }
   /* O bloqueio do scroll vive na media query para se libertar sozinho se a
      janela crescer com o menu aberto — não depende de nenhum evento. */
   body.menu-aberto { overflow: hidden; }
@@ -308,7 +313,11 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
   overflow: hidden; background: var(--papel-2); aspect-ratio: 4 / 3; margin-bottom: .9rem;
   border-radius: var(--raio-g);
 }
-.cartao__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,0,0,1); }
+/* O ponto de interesse do corte a 4:3, quando o centro não serve. Vem escrito
+   no `style` do cartão, a partir do campo `foco` da peça; sem ele, é o centro.
+   Só conta aqui: na montra a fotografia aparece inteira e não há o que focar. */
+.cartao__foto { --foco: 50% 50%; }
+.cartao__foto img { width: 100%; height: 100%; object-fit: cover; object-position: var(--foco); transition: transform .8s cubic-bezier(.2,0,0,1); }
 /* Na montra a proporção vem do próprio ficheiro, escrita no atributo `style` de
    cada cartão — cada fotografia aparece inteira, sem corte. */
 .cartao__foto--natural { aspect-ratio: auto; }
