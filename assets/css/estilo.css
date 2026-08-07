@@ -428,6 +428,22 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
 .contacto__lista svg { width: 19px; height: 19px; color: var(--petroleo); flex: none; margin-top: .2rem; }
 .contacto__lista small { display: block; font-size: .8rem; color: var(--tinta-3); margin-top: .1rem; }
 .contacto__lista a:hover { color: var(--petroleo); }
+
+.contacto__redes {
+  display: flex; align-items: center; gap: .6rem;
+  margin-top: 1.8rem; padding-top: 1.4rem; border-top: 1px solid var(--borda);
+}
+.contacto__redes span {
+  font-size: .74rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tinta-3); margin-right: .3rem;
+}
+.contacto__redes a {
+  display: grid; place-items: center; width: 40px; height: 40px;
+  border: 1px solid var(--borda-forte); border-radius: 50%;
+  transition: background var(--t), border-color var(--t), color var(--t);
+}
+.contacto__redes a:hover { background: var(--tinta); border-color: var(--tinta); color: var(--papel); }
+.contacto__redes svg { width: 18px; height: 18px; }
 @media (max-width: 900px) {
   .painel-contacto { grid-template-columns: 1fr; }
   .painel-contacto__mapa { min-height: 0; aspect-ratio: 4 / 3; }

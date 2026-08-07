@@ -53,12 +53,16 @@ Nada mais muda. Não há um segundo sítio para actualizar.
 
 Nada disto foi inventado — está tudo em falta de propósito:
 
+- **Que dias abre.** O horário «das 9h às 19h» já está no sítio, mas sem dias:
+  de segunda a sexta? ao sábado também? Sem isso não se pode declarar o horário
+  nos dados estruturados (`openingHours` exige os dias), que é o que faz o
+  Google mostrar «Aberto agora» na pesquisa. Assim que houver resposta, é uma
+  linha.
 - **Espécies de madeira** de cada peça (carvalho, castanho, suão…). As fichas
   das peças têm o campo pronto e vazio; assim que o atelier disser, aparece.
 - **Medidas** das peças já feitas.
 - **Ano de início de actividade** — dá para escrever «desde 20XX» no atelier.
 - **Prazo médio de execução** de uma encomenda.
-- **Horário** ou regra de atendimento além de «por marcação».
 - **Google Business Profile**, se existir, para juntar aos dados estruturados e
   ao mapa.
 

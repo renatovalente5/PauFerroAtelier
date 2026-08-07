@@ -37,6 +37,9 @@ const rel = (p) => p.slice(SAIDA.length);
    verificar uma coisa diferente da que foi construída, e deixa de servir para
    nada. Esta é a verificação que teria apanhado, em minutos, o site que esteve
    dias sem CSS por ter sido construído para um subdirectório e servido na raiz. */
+const TELEFONE = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/definicoes.json'), 'utf8')).contactos.telefone;
+const RE_TELEFONE = new RegExp(TELEFONE.split('').join('\\s?'), 'g');
+
 const PREFIXO = (process.env.BASE ?? (existsSync(join(SAIDA, 'CNAME')) ? '' : '/PauFerroAtelier'))
   .replace(/\/$/, '');
 
@@ -130,8 +133,11 @@ for (const f of paginas) {
   const desc = (h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
   if (desc.length > 165) aviso(n, `description com ${desc.length} caracteres`);
 
-  /* 7. o custo da chamada, obrigatório onde quer que apareça um número */
-  const nums = (h.match(/925\s?110\s?570/g) || []).length;
+  /* 7. o custo da chamada, obrigatório onde quer que apareça um número.
+        O número vem das definições e não escrito à mão: já foi trocado uma vez,
+        e uma auditoria que procura um número velho deixa de encontrar seja o
+        que for e passa sempre, calada. */
+  const nums = (h.match(RE_TELEFONE) || []).length;
   const notas = (h.match(/\(Chamada para a rede móvel nacional\)/g) || []).length;
   if (nums && !notas) mal(n, 'mostra o telefone sem a nota do custo da chamada');
 

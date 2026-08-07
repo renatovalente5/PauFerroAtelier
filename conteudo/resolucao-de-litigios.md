@@ -9,7 +9,7 @@ _Última actualização: 7 de agosto de 2026_
 
 ## Fale connosco primeiro
 
-Quase tudo se resolve com um telefonema. Ligue **925 110 570** (Chamada para a rede móvel nacional) ou escreva para **geralpauferro@outlook.pt** e explique o que se passa.
+Quase tudo se resolve com um telefonema. Ligue **916 862 737** (Chamada para a rede móvel nacional) ou escreva para **geralpauferro@outlook.pt** e explique o que se passa.
 
 ## Livro de Reclamações
 

@@ -11,7 +11,7 @@ _Última actualização: 7 de agosto de 2026_
 
 Este sítio é do **Pau Ferro Atelier**, empresário em nome individual, com o número de identificação fiscal **247898511**, a exercer actividade de marcenaria em **Valongo, distrito do Porto**.
 
-Contactos: telefone **925 110 570** (Chamada para a rede móvel nacional) e correio electrónico **geralpauferro@outlook.pt**.
+Contactos: telefone **916 862 737** (Chamada para a rede móvel nacional) e correio electrónico **geralpauferro@outlook.pt**.
 
 Esta informação é prestada nos termos do artigo 10.º do **Decreto-Lei n.º 7/2004**, de 7 de janeiro, que regula o comércio electrónico.
 

@@ -11,7 +11,7 @@ _Última actualização: 7 de agosto de 2026_
 
 O responsável pelo tratamento é o **Pau Ferro Atelier**, empresário em nome individual, número de identificação fiscal **247898511**, com actividade em Valongo, distrito do Porto.
 
-Pode contactar-nos pelo telefone **925 110 570** (Chamada para a rede móvel nacional) ou por **geralpauferro@outlook.pt**.
+Pode contactar-nos pelo telefone **916 862 737** (Chamada para a rede móvel nacional) ou por **geralpauferro@outlook.pt**.
 
 Não temos encarregado de protecção de dados, por não estarmos abrangidos por essa obrigação.
 
