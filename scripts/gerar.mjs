@@ -297,6 +297,16 @@ const negocioLD = {
     addressCountry: 'PT',
   },
   areaServed: { '@type': 'AdministrativeArea', name: `${def.local.localidade}, ${def.local.distrito}` },
+  /* O horário sai dos mesmos dados que a frase da página de contactos. É isto
+     que faz o Google poder mostrar "Aberto agora" na pesquisa — e por isso os
+     dias e as horas estão separados nas definições, em vez de escritos numa
+     frase que ninguém consegue ler de volta. */
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: def.horario.dias,
+    opens: def.horario.abre,
+    closes: def.horario.fecha,
+  }],
   sameAs: [def.redes.instagram, def.redes.facebook].filter(Boolean),
 };
 
@@ -672,7 +682,7 @@ function paginaContactos() {
         <ul class="contacto__lista">
           <li>${ic.tel}<span><b><a href="tel:+351${def.contactos.telefone}">${esc(def.contactos.telefone_texto)}</a></b>
             <small>${NOTA_CHAMADA}</small></span></li>
-          <li>${ic.relogio}<span><b>${esc(def.contactos.horario)}</b></span></li>
+          <li>${ic.relogio}<span><b>${esc(def.horario.texto)}</b></span></li>
           <li>${ic.mail}<span><b><a href="mailto:${esc(def.contactos.email)}">${esc(def.contactos.email)}</a></b></span></li>
           <li>${ic.zap}<span><b><a href="https://wa.me/${def.contactos.whatsapp}" target="_blank" rel="noopener">WhatsApp</a></b>
             <small>Envie a medida e uma fotografia do espaço</small></span></li>

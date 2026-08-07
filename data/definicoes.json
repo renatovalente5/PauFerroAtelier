@@ -8,8 +8,19 @@
     "telefone": "916862737",
     "telefone_texto": "916 862 737",
     "whatsapp": "351916862737",
-    "email": "geralpauferro@outlook.pt",
-    "horario": "Das 9h às 19h"
+    "email": "geralpauferro@outlook.pt"
+  },
+  "horario": {
+    "texto": "Segunda a sexta, das 9h às 19h",
+    "dias": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "abre": "09:00",
+    "fecha": "19:00"
   },
   "local": {
     "localidade": "Valongo",

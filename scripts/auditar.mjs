@@ -185,6 +185,24 @@ for (const f of paginas) {
   }
 }
 
+/* 10a-bis. o horário na página e o horário nos dados estruturados têm de dizer
+        a mesma coisa. São dois sítios diferentes alimentados pelo mesmo campo,
+        e é exactamente por aí que estas coisas se desencontram sem ninguém dar
+        por isso — o Google passaria a anunciar horas que a página não mostra. */
+{
+  const horario = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/definicoes.json'), 'utf8')).horario;
+  const contactos = readFileSync(join(SAIDA, 'contactos/index.html'), 'utf8');
+  if (!contactos.includes(horario.texto)) mal('/contactos/index.html', `não mostra o horário "${horario.texto}"`);
+  const negocio = [...contactos.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map(([, j]) => JSON.parse(j)).find((j) => j['@type'] === 'LocalBusiness');
+  const spec = negocio?.openingHoursSpecification?.[0];
+  if (!spec) mal('/contactos/index.html', 'o LocalBusiness não declara openingHoursSpecification');
+  else if (spec.opens !== horario.abre || spec.closes !== horario.fecha
+           || spec.dayOfWeek.join() !== horario.dias.join()) {
+    mal('/contactos/index.html', 'o horário dos dados estruturados não bate certo com as definições');
+  }
+}
+
 /* 10b. indexação: só quando houver domínio próprio. A regra e a verificação
         saem do mesmo facto, por isso não podem discordar. */
 const temDominio = existsSync(join(SAIDA, 'CNAME'));
