@@ -141,9 +141,20 @@ for (const f of paginas) {
   const notas = (h.match(/\(Chamada para a rede móvel nacional\)/g) || []).length;
   if (nums && !notas) mal(n, 'mostra o telefone sem a nota do custo da chamada');
 
-  /* 8. JSON-LD tem de ser JSON válido */
+  /* 8. JSON-LD tem de ser JSON válido — e não pode declarar `Product` sem
+        preço. A Google recusa um Product sem `offers`, `review` ou
+        `aggregateRating`, e este site nunca vai ter nenhum dos três: as peças
+        já foram entregues e não têm preço publicado. Estava assim e o validador
+        acusou; fica aqui para não voltar. */
   for (const [, bruto] of h.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
-    try { JSON.parse(bruto); } catch (e) { mal(n, `JSON-LD inválido: ${e.message}`); }
+    let dados;
+    try { dados = JSON.parse(bruto); } catch (e) { mal(n, `JSON-LD inválido: ${e.message}`); continue; }
+    for (const item of [dados].flat()) {
+      if (item['@type'] !== 'Product') continue;
+      if (!item.offers && !item.review && !item.aggregateRating) {
+        mal(n, 'declara Product sem offers/review/aggregateRating — a Google recusa-o');
+      }
+    }
   }
 
   /* 9. abrir noutro separador sem rel="noopener" é uma falha de segurança */

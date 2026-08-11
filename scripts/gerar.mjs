@@ -586,16 +586,28 @@ function paginaPeca(p) {
     og: abs(`assets/pecas/${p.slug}/og.jpg`),
     jsonld: [
       {
-        '@context': 'https://schema.org', '@type': 'Product',
+        /* `CreativeWork` e não `Product`, e a razão é a mesma pela qual a
+           página não tem preço: **estas peças não estão à venda**. Já foram
+           feitas e entregues a um cliente, e estão aqui como trabalho feito.
+
+           Foi o validador da Google que obrigou a arrumar isto. Com `Product`
+           dava erro — «deve ser especificada a propriedade offers, review ou
+           aggregateRating» — e as três estão fora de questão: não há preço
+           publicado, não há avaliações, e inventar um preço que a página não
+           mostra é expressamente proibido pelas regras dele. Um marcador
+           inválido é pior do que nenhum: não traz benefício e ainda aparece
+           como erro no Search Console.
+
+           `CreativeWork` descreve exactamente o que isto é — uma obra feita
+           por alguém — e não exige preço nenhum. */
+        '@context': 'https://schema.org', '@type': 'CreativeWork',
         name: nomePeca(p),
         description: p.descricao,
         image: p.fotos.map((n) => abs(`assets/pecas/${p.slug}/${n}-1600.jpg`)),
-        category: CATEGORIAS[p.categoria],
         ...(p.madeira ? { material: p.madeira } : {}),
-        brand: { '@type': 'Brand', name: def.empresa.nome },
-        /* Sem `offers`: não há preço publicado, e marcar um preço que não está
-           visível na página é expressamente proibido pelo Google. */
-        manufacturer: { '@id': abs('#atelier') },
+        keywords: CATEGORIAS[p.categoria],
+        inLanguage: 'pt-PT',
+        creator: { '@id': abs('#atelier') },
       },
       negocioLD,
       migalhasLD([{ nome: 'Início', href: '' }, { nome: 'Peças', href: 'pecas/' }, { nome: p.nome }]),
