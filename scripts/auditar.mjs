@@ -37,7 +37,9 @@ const rel = (p) => p.slice(SAIDA.length);
    verificar uma coisa diferente da que foi construída, e deixa de servir para
    nada. Esta é a verificação que teria apanhado, em minutos, o site que esteve
    dias sem CSS por ter sido construído para um subdirectório e servido na raiz. */
-const TELEFONE = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/definicoes.json'), 'utf8')).contactos.telefone;
+const DEF = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/definicoes.json'), 'utf8'));
+const def_nome = DEF.empresa.nome;
+const TELEFONE = DEF.contactos.telefone;
 const RE_TELEFONE = new RegExp(TELEFONE.split('').join('\\s?'), 'g');
 
 const PREFIXO = (process.env.BASE ?? (existsSync(join(SAIDA, 'CNAME')) ? '' : '/PauFerroAtelier'))
@@ -129,9 +131,12 @@ for (const f of paginas) {
   ]) if (!re.test(h)) mal(n, m);
 
   const titulo = (h.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
-  if (titulo.length > 65) aviso(n, `título com ${titulo.length} caracteres (o Google corta perto dos 60)`);
+  if (titulo.length > 60) aviso(n, `título com ${titulo.length} caracteres (o Google corta perto dos 60)`);
+  /* Basta a raiz da marca: dois títulos de peça usam «Pau Ferro» em vez do
+     nome completo, para caberem nos 60 caracteres sem cortar o nome da peça. */
+  if (!titulo.includes('Pau Ferro')) aviso(n, 'título sem o nome do atelier');
   const desc = (h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
-  if (desc.length > 165) aviso(n, `description com ${desc.length} caracteres`);
+  if (desc.length > 160) aviso(n, `description com ${desc.length} caracteres (o Google corta aos 160)`);
 
   /* 7. o custo da chamada, obrigatório onde quer que apareça um número.
         O número vem das definições e não escrito à mão: já foi trocado uma vez,
@@ -219,6 +224,10 @@ for (const f of paginas) {
 const temDominio = existsSync(join(SAIDA, 'CNAME'));
 const robots = readFileSync(join(SAIDA, 'robots.txt'), 'utf8');
 for (const f of paginas) {
+  /* O 404 leva `noindex` sempre e de propósito: é uma página de erro, não tem
+     conteúdo próprio, e indexá-la só serve para a Google mostrar «página não
+     encontrada» nos resultados. Pelo mesmo motivo não entra no sitemap. */
+  if (rel(f) === '/404.html') continue;
   const noindex = /<meta name="robots" content="noindex/.test(readFileSync(f, 'utf8'));
   if (temDominio && noindex) mal(rel(f), 'tem noindex apesar de haver domínio próprio');
   if (!temDominio && !noindex) mal(rel(f), 'sem noindex, e o site ainda está no endereço provisório');
@@ -228,7 +237,7 @@ if (temDominio !== robots.includes('Allow: /')) mal('robots.txt', 'não condiz c
 /* 11. o sitemap cobre todas as páginas e nada a mais */
 const mapa = readFileSync(join(SAIDA, 'sitemap.xml'), 'utf8');
 const noMapa = [...mapa.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, v]) => new URL(v).pathname.slice(PREFIXO.length));
-const noDisco = paginas.map((p) => rel(p).replace(/index\.html$/, ''));
+const noDisco = paginas.map((p) => rel(p).replace(/index\.html$/, '')).filter((p) => p !== '/404.html');
 for (const p of noDisco) if (!noMapa.includes(p)) mal('sitemap.xml', `falta ${p}`);
 for (const p of noMapa) if (!noDisco.includes(p)) mal('sitemap.xml', `${p} não existe`);
 

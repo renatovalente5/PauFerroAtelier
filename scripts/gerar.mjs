@@ -235,7 +235,7 @@ function rodape() {
 }
 
 /* --------------------------------------------------------------- esqueleto */
-function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = '' }) {
+function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = '', naoIndexar = false }) {
   const url = abs(pag);
   const imagem = og ?? abs('assets/img/og.jpg');
   return `<!doctype html>
@@ -258,7 +258,7 @@ function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = 
 <meta property="og:image:type" content="image/jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1C1A18">
-${dominio ? '' : '<!-- Enquanto o atelier não tiver domínio, o site vive num endereço\n     provisório do GitHub. Deixá-lo indexar punha o Google a guardar o\n     endereço errado, e depois havia que o desfazer. Basta escrever o\n     ficheiro CNAME para esta linha desaparecer sozinha. -->\n<meta name="robots" content="noindex, nofollow">'}
+${naoIndexar ? '<meta name="robots" content="noindex">' : ''}${dominio ? '' : '<!-- Enquanto o atelier não tiver domínio, o site vive num endereço\n     provisório do GitHub. Deixá-lo indexar punha o Google a guardar o\n     endereço errado, e depois havia que o desfazer. Basta escrever o\n     ficheiro CNAME para esta linha desaparecer sozinha. -->\n<meta name="robots" content="noindex, nofollow">'}
 <link rel="icon" href="${u('assets/img/favicon-32.png')}" sizes="32x32" type="image/png">
 <link rel="icon" href="${u('assets/img/favicon-96.png')}" sizes="96x96" type="image/png">
 <link rel="apple-touch-icon" href="${u('assets/img/apple-touch-icon.png')}">
@@ -283,18 +283,30 @@ const negocioLD = {
   '@type': 'LocalBusiness',
   '@id': abs('#atelier'),
   name: def.empresa.nome,
-  alternateName: ['PauFerro', 'Pau Ferro Woodworking'],
+  /* Só o encurtamento que as pessoas usam. «Pau Ferro Woodworking» é a
+     assinatura do logótipo, não um nome pelo qual alguém procure — e nomes
+     que não existem atrapalham a Google a associar a entidade. */
+  alternateName: 'Pau Ferro',
   description: def.empresa.actividade,
   url: abs(''),
   image: abs('assets/img/og.jpg'),
   telephone: `+351${def.contactos.telefone}`,
   email: def.contactos.email,
   vatID: `PT${def.empresa.nif}`,
+  logo: abs('assets/img/logo-tinta.png'),
   address: {
     '@type': 'PostalAddress',
     addressLocality: def.local.localidade,
     addressRegion: def.local.distrito,
     addressCountry: 'PT',
+  },
+  /* As coordenadas estavam em `definicoes.json` desde o primeiro dia e nunca
+     eram lidas. Apontam para a localidade, não para uma porta — que é o que se
+     pode dizer enquanto o cliente não decidir sobre a morada. */
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: def.local.latitude,
+    longitude: def.local.longitude,
   },
   areaServed: { '@type': 'AdministrativeArea', name: `${def.local.localidade}, ${def.local.distrito}` },
   /* O horário sai dos mesmos dados que a frase da página de contactos. É isto
@@ -518,8 +530,15 @@ function paginaPecas() {
    escrever à sorte, junta-se a frase da peça ao remate e corta-se pela última
    palavra inteira que couber — assim nunca acaba a meio de uma palavra. */
 function descricaoPeca(p) {
-  const remate = ' Fabricada por encomenda no atelier Pau Ferro, em Valongo.';
-  const espaco = 160 - remate.length;
+  /* «Peça fabricada» e não «Fabricada»: o remate seguia-se a nomes masculinos
+     — «Aparador de madeira maciça… Fabricada por encomenda» — e essa frase
+     estava tal e qual em mais de metade das 26 descrições, à vista de quem
+     pesquisa. Com «Peça» à frente, a concordância deixa de depender do nome.
+
+     O -3 é o espaço das reticências que o corte acrescenta. Sem ele, duas
+     descrições passavam os 160 caracteres. */
+  const remate = ' Peça fabricada por encomenda no atelier Pau Ferro, em Valongo.';
+  const espaco = 160 - remate.length - 3;
   const texto = p.descricao.length <= espaco
     ? p.descricao
     : p.descricao.slice(0, p.descricao.lastIndexOf(' ', espaco - 1)) + '...';
@@ -527,8 +546,31 @@ function descricaoPeca(p) {
 }
 
 function paginaPeca(p) {
-  const outras = pecas.filter((x) => x.slug !== p.slug && x.categoria === p.categoria).slice(0, 3);
-  const restantes = outras.length ? outras : pecas.filter((x) => x.slug !== p.slug).slice(0, 3);
+  /* A janela das «outras peças» roda a partir da peça actual, e não é sempre
+     as três primeiras da lista. Com `slice(0, 3)` fixo, medido no site: três
+     peças recebiam 20 ligações internas cada e **doze peças recebiam uma só**,
+     a da montra. Para o Google, uma página com uma única ligação de entrada é
+     uma página que quase não existe.
+
+     Rodar custa duas linhas e passa todas a ter três ligações. */
+  const seguintes = (lista, quantas) => {
+    const i = Math.max(0, lista.findIndex((x) => x.slug === p.slug));
+    return Array.from({ length: lista.length }, (_, k) => lista[(i + 1 + k) % lista.length])
+      .filter((x) => x.slug !== p.slug).slice(0, quantas);
+  };
+
+  /* Duas da mesma categoria, que são as úteis a quem está a ver, mais **uma
+     vizinha na lista global**, que é a que fecha a corrente.
+
+     Sem essa terceira, as duas peças que são as únicas da sua categoria — o
+     aparador e o louceiro — não recebiam ligação de peça nenhuma. Medido: uma
+     delas ficava com uma única ligação de entrada em todo o site. Com a
+     vizinha global, cada peça aponta para a seguinte e nenhuma fica de fora. */
+  const daCategoria = pecas.filter((x) => x.categoria === p.categoria);
+  const vizinha = seguintes(pecas, 1);
+  const restantes = [...seguintes(daCategoria, 2), ...vizinha, ...seguintes(pecas, 3)]
+    .filter((x, i, a) => a.findIndex((y) => y.slug === x.slug) === i)
+    .slice(0, 3);
   const detalhes = [
     ['Tipo de peça', CATEGORIAS[p.categoria]],
     ['Madeira', p.madeira],
@@ -590,7 +632,11 @@ function paginaPeca(p) {
 
   return pagina({
     pag: `pecas/${p.slug}/`,
-    titulo: `${p.nome} | ${def.empresa.nome}`,
+    /* Duas peças têm nomes longos e passavam os 60 caracteres com a marca
+       inteira. Em vez de cortar o nome da peça, encurta-se a marca — «Pau
+       Ferro» continua a identificar quem é, e o nome da peça é o que interessa
+       a quem pesquisa. */
+    titulo: `${p.nome} | ${p.nome.length > 40 ? 'Pau Ferro' : def.empresa.nome}`,
     descricao: descricaoPeca(p),
     corpo,
     og: abs(`assets/pecas/${p.slug}/og.jpg`),
@@ -818,6 +864,27 @@ function main() {
 ${urls.map((p) => `  <url><loc>${abs(p)}</loc><lastmod>${hoje}</lastmod></url>`).join('\n')}
 </urlset>
 `);
+  /* Página 404 própria. O GitHub Pages serve `/404.html` em qualquer caminho
+     que não exista, e sem ela quem escreve mal um endereço cai na página cinzenta
+     genérica do GitHub — sem navegação, sem contactos e sem forma de voltar. */
+  escrever('404.html', pagina({
+    pag: '404.html',
+    titulo: `Página não encontrada | ${def.empresa.nome}`,
+    descricao: 'O endereço que procura não existe neste sítio. Veja as peças do atelier ou fale connosco.',
+    naoIndexar: true,
+    corpo: `<section class="secao secao--topo">
+  <div class="envolve envolve--texto">
+    <p class="sobretitulo">Erro 404</p>
+    <h1 class="h-pagina">Esta página não existe</h1>
+    <p class="lead">O endereço que seguiu não corresponde a nada aqui. Pode ter sido escrito com um erro, ou a página pode ter mudado de sítio.</p>
+    <div class="capa__accoes">
+      <a class="btn btn--cheio" href="${u('pecas/')}">Ver as peças ${ic.seta}</a>
+      <a class="btn btn--linha" href="${u('')}">Voltar ao início</a>
+    </div>
+  </div>
+</section>`,
+  }));
+
   escrever('robots.txt', dominio
     ? `User-agent: *\nAllow: /\n\nSitemap: ${abs('sitemap.xml')}\n`
     : `# Endereço provisório, sem domínio próprio ainda. Não indexar.\nUser-agent: *\nDisallow: /\n`);
