@@ -448,7 +448,17 @@ function paginaInicial() {
 
   return pagina({
     pag: '',
-    titulo: 'Mesas em madeira maciça e resina epóxi | Valongo, Porto',
+    /* A marca vem à frente, e isto é deliberado. O título da entrada era o
+       único do site sem o nome do atelier — tinha sido retirado para caber nos
+       60 caracteres —, e o resultado via-se na Google: mostrava o domínio
+       "pauferroatelier.pt" como nome do sítio e um título sem marca nenhuma.
+       Quem pesquisa pelo nome não encontrava nada que o confirmasse.
+
+       "Valongo" saiu do título mas continua na descrição, no sobretítulo da
+       página, no LocalBusiness e no perfil do Google. Aqui custava sete
+       caracteres acima do que a Google mostra, e um título cortado a meio da
+       palavra é pior do que um título sem a localidade. */
+    titulo: 'Pau Ferro Atelier — Mesas em madeira e resina epóxi',
     descricao: `Atelier em Valongo, Porto. Mesas de jantar, aparadores e tampos em madeira maciça e resina epóxi, fabricados por encomenda e à medida.`,
     corpo,
     classe: 'pagina-inicial',
