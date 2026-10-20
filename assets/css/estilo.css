@@ -379,7 +379,34 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
 /* ------------------------------------------------------------ duas colunas */
 .duas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(1.8rem, 4vw, 3.5rem); align-items: center; }
 .duas__foto img { border-radius: var(--raio-g); }
+/* Duas colunas de texto alinham pelo título, não pelo meio. */
+.duas--topo { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 @media (max-width: 900px) { .duas { grid-template-columns: 1fr; } }
+
+/* ------------------------------------------------- mesas em resina epóxi */
+/* A ligação que remata uma secção, e a mesma sobre o fundo escuro. */
+.secao__mais { margin-top: clamp(2rem, 4vw, 2.8rem); }
+.ligacao--clara { color: var(--papel); border-color: rgba(250,249,246,.35); }
+.ligacao--clara:hover { border-color: var(--papel); }
+
+/* Os exemplos de cada tipo de mesa e as peças de cada cor: ligações no meio do
+   texto, sublinhadas como as `.ligacao`, mas sem o peso de um botão. */
+.carta__pecas { margin-top: .9rem; font-size: .88rem; color: var(--tinta-3); }
+.carta__pecas a, .cor__pecas a {
+  color: var(--tinta); border-bottom: 1px solid var(--borda-forte); transition: border-color var(--t);
+}
+.carta__pecas a:hover, .cor__pecas a:hover { border-color: var(--tinta); }
+.cor__nome { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; letter-spacing: -.01em; }
+.cor__nome span {
+  font-family: var(--sans); font-size: .74rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tinta-3); margin-left: .45rem;
+}
+.cor__pecas { margin-top: .4rem; font-size: .9rem; color: var(--tinta-2); line-height: 1.75; }
+.perguntas h3:first-child { margin-top: 0; }
+
+/* Nas peças, «Outras peças» leva ao lado a ligação para as mesas em resina; o
+   título perde a margem própria, que o `.secao__topo` já dá. */
+.secao__relacionadas .secao__topo .h-secao { margin-bottom: 0; }
 
 /* -------------------------------------------------------------- uma peça */
 .peca { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, .85fr); gap: clamp(1.6rem, 3.5vw, 3rem); align-items: start; }

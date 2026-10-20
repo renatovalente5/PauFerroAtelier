@@ -139,7 +139,25 @@ function foto(peca, n, { sizes, prioritaria = false, classe = '', alt }) {
 }
 
 const nomePeca = (p) => p.nome;
-const tituloPeca = (p) => `${p.nome} — ${CATEGORIAS[p.categoria] || ''}`.replace(/ — $/, '');
+
+/* O nome com que a peça se apresenta ao Google: no título da página e no texto
+   alternativo da fotografia principal. O nome curto — «Mesa de jantar com rio
+   azul» — fica para a montra e para o <h1>, onde se lê bem; mas é com «resina
+   epóxi» que as pessoas pesquisam, e esse material não aparecia em nenhum
+   título das peças. Só nas que têm resina: um louceiro de madeira maciça não
+   passa a ser de resina por causa disto. */
+const nomeComResina = (p) => {
+  if (!p.resina) return p.nome;
+  if (/resina/i.test(p.nome)) return p.nome.replace(/resina/i, 'resina epóxi');
+  /* «Mesa de jantar em madeira escura em resina epóxi» lia-se mal: quando o
+     nome já acaba no material, a resina junta-se-lhe com um «e». */
+  if (/ em madeira \S+$/.test(p.nome)) return `${p.nome} e resina epóxi`;
+  return `${p.nome} em resina epóxi`;
+};
+
+/* A página que explica as mesas em resina epóxi. Vive num sítio só porque é
+   apontada de muitos: o menu, a entrada e todas as peças. */
+const PAG_RESINA = 'mesas-resina-epoxi/';
 
 /* ---------------------------------------------------------------- telefone */
 /* A lei obriga a indicar o custo da chamada sempre que se publica um número.
@@ -153,6 +171,7 @@ const telefone = (classe = '') => `<a class="tel ${classe}" href="tel:+351${def.
 const MENU = [
   { href: '', rot: 'Início' },
   { href: 'pecas/', rot: 'Peças' },
+  { href: PAG_RESINA, rot: 'Mesas em resina' },
   { href: 'atelier/', rot: 'O atelier' },
   { href: 'contactos/', rot: 'Contactos' },
 ];
@@ -440,6 +459,7 @@ function paginaInicial() {
       <li class="passo"><span class="passo__n">4</span><h3>A entrega</h3>
         <p>A peça é montada e entregue pronta a usar. Cada uma é feita de raiz para quem a encomendou.</p></li>
     </ol>
+    <p class="secao__mais"><a class="ligacao ligacao--clara" href="${u(PAG_RESINA)}">Tudo sobre as mesas em resina epóxi ${ic.seta}</a></p>
   </div>
 </section>
 
@@ -509,7 +529,7 @@ function paginaPecas() {
 
   return pagina({
     pag: 'pecas/',
-    titulo: `Peças em madeira maciça e resina | ${def.empresa.nome}`,
+    titulo: `Peças em madeira maciça e resina epóxi | ${def.empresa.nome}`,
     descricao: `${pecas.length} peças fabricadas por encomenda no atelier, em Valongo: mesas de jantar, mesas redondas, aparadores e tampos em madeira maciça e resina epóxi.`,
     corpo,
     jsonld: [
@@ -574,7 +594,7 @@ function paginaPeca(p) {
   const detalhes = [
     ['Tipo de peça', CATEGORIAS[p.categoria]],
     ['Madeira', p.madeira],
-    ['Resina', p.resina ? `Resina ${p.resina}` : ''],
+    ['Resina epóxi', p.resina ? p.resina[0].toUpperCase() + p.resina.slice(1) : ''],
     ['Medidas', p.medidas],
   ].filter(([, v]) => v);
 
@@ -592,7 +612,7 @@ function paginaPeca(p) {
     <div class="peca">
       <div class="peca__galeria">
         <div class="peca__principal" style="view-transition-name: peca-${esc(p.slug)}">
-          ${foto(p, p.fotos[0], { sizes: '(max-width: 980px) 100vw, 62vw', prioritaria: true, alt: nomePeca(p) })}
+          ${foto(p, p.fotos[0], { sizes: '(max-width: 980px) 100vw, 62vw', prioritaria: true, alt: nomeComResina(p) })}
         </div>
         ${p.fotos.length > 1 ? `<div class="peca__mais">
           ${p.fotos.slice(1).map((n) => `<div class="peca__extra">${foto(p, n, { sizes: '(max-width: 980px) 50vw, 31vw', alt: `${nomePeca(p)} — outra vista` })}</div>`).join('')}
@@ -601,7 +621,7 @@ function paginaPeca(p) {
 
       <aside class="peca__lado">
         <div class="ficha">
-          <p class="sobretitulo">${esc(CATEGORIAS[p.categoria] || '')}</p>
+          <p class="sobretitulo">${esc(CATEGORIAS[p.categoria] || '')}${p.resina ? ' · Resina epóxi' : ''}</p>
           <h1 class="ficha__titulo">${esc(p.nome)}</h1>
           <p class="ficha__texto">${esc(p.descricao)}</p>
 
@@ -624,19 +644,27 @@ function paginaPeca(p) {
     </div>
 
     ${restantes.length ? `<section class="secao__relacionadas">
-      <h2 class="h-secao">Outras peças</h2>
+      <div class="secao__topo">
+        <h2 class="h-secao">Outras peças</h2>
+        <a class="ligacao" href="${u(PAG_RESINA)}">Sobre as mesas em resina epóxi ${ic.seta}</a>
+      </div>
       <div class="grelha">${restantes.map((x, i) => cartaoPeca(x, i)).join('')}</div>
     </section>` : ''}
   </div>
 </section>`;
 
+  /* O título leva o material, e a marca só se couber. Os nomes com «em resina
+     epóxi» passavam os 60 caracteres com a marca inteira; encurta-se primeiro a
+     marca, e só se nem «Pau Ferro» couber é que sai. Cortar o nome da peça
+     nunca: é ele que interessa a quem pesquisa, e o Google já mostra o nome do
+     sítio por cima do título, tirado dos dados do WebSite. */
+  const nomeLongo = nomeComResina(p);
+  const titulo = [`${nomeLongo} | ${def.empresa.nome}`, `${nomeLongo} | Pau Ferro`]
+    .find((t) => t.length <= 60) ?? nomeLongo;
+
   return pagina({
     pag: `pecas/${p.slug}/`,
-    /* Duas peças têm nomes longos e passavam os 60 caracteres com a marca
-       inteira. Em vez de cortar o nome da peça, encurta-se a marca — «Pau
-       Ferro» continua a identificar quem é, e o nome da peça é o que interessa
-       a quem pesquisa. */
-    titulo: `${p.nome} | ${p.nome.length > 40 ? 'Pau Ferro' : def.empresa.nome}`,
+    titulo,
     descricao: descricaoPeca(p),
     corpo,
     og: abs(`assets/pecas/${p.slug}/og.jpg`),
@@ -660,7 +688,9 @@ function paginaPeca(p) {
         name: nomePeca(p),
         description: p.descricao,
         image: p.fotos.map((n) => abs(`assets/pecas/${p.slug}/${n}-1600.jpg`)),
-        ...(p.madeira ? { material: p.madeira } : {}),
+        /* A espécie da madeira fica por dizer até o atelier a dar; a resina
+           sabe-se pelos dados de cada peça. */
+        ...((p.madeira || p.resina) ? { material: [p.madeira, p.resina && 'Resina epóxi'].filter(Boolean) } : {}),
         keywords: CATEGORIAS[p.categoria],
         inLanguage: 'pt-PT',
         creator: { '@id': abs('#atelier') },
@@ -714,6 +744,238 @@ function paginaAtelier() {
     descricao: 'O Pau Ferro Atelier trabalha madeira maciça e resina epóxi em Valongo, Porto. Peças únicas, fabricadas por encomenda e à medida do espaço de cada cliente.',
     corpo,
     jsonld: [negocioLD, migalhasLD([{ nome: 'Início', href: '' }, { nome: 'O atelier' }])],
+  });
+}
+
+/* ------------------------------------------------- mesas em resina epóxi */
+/* A página para quem procura «mesas em resina epoxy» no Google, e é por isso
+   que existe. Medido a 20 out 2026: nessa pesquisa o site não aparecia nos
+   primeiros 74 resultados (com «porto» no fim aparecia em 2.º), e das 26 peças
+   só 4 estavam no índice; as outras 22 tinham sido descobertas e nunca
+   visitadas. A entrada é uma montra e diz pouco. Esta página diz o que é uma
+   mesa destas, que tipos e que cores o atelier já fez, o que pesa no preço e
+   como se trata — e liga a cada peça, que é o caminho por onde o Google chega
+   às que ainda não conhece.
+
+   Nada aqui promete o que o atelier não disse: sem preços, sem prazos, sem
+   medidas, sem espécies de madeira. O que é geral — a grafia da palavra, o
+   que é uma mesa rio, os cuidados — vale para qualquer mesa em resina epóxi.
+
+   «Epoxy» aparece uma vez, de propósito, na pergunta sobre a grafia. É como o
+   cliente escreve e como muita gente pesquisa; o Google já trata as grafias
+   como a mesma palavra (os primeiros resultados para «epoxy» dizem «epóxi»),
+   por isso não há razão para a repetir mais do que isso. */
+function paginaResina() {
+  const peca = (slug) => {
+    const p = pecas.find((x) => x.slug === slug);
+    if (!p) throw new Error(`a página das mesas em resina refere a peça ${slug}, que não existe`);
+    return p;
+  };
+  const ligar = (p) => `<a href="${u('pecas/' + p.slug + '/')}">${esc(p.nome)}</a>`;
+  const enumerar = (ps) => (ps.length > 1
+    ? `${ps.slice(0, -1).map(ligar).join(', ')} e ${ligar(ps.at(-1))}`
+    : ligar(ps[0]));
+  /* As de destaque primeiro: são as que o atelier escolheu mostrar. */
+  const exemplos = (ps, n) => [...ps]
+    .sort((a, b) => (b.destaque === true) - (a.destaque === true) || (a.ordem ?? 999) - (b.ordem ?? 999))
+    .slice(0, n);
+  const daCategoria = (...cats) => pecas.filter((p) => cats.includes(p.categoria));
+
+  const TIPOS = [
+    { titulo: 'Mesas de jantar', pecas: daCategoria('mesa-jantar'),
+      texto: 'A maior parte do que fazemos. Muitas são mesas rio — a que lá fora se chama <i lang="en">river table</i> —, com a resina a correr de ponta a ponta entre duas abas de borda natural. Outras levam só um veio fino de resina, ou nenhuma.' },
+    { titulo: 'Mesas redondas', pecas: daCategoria('mesa-redonda'),
+      texto: 'Tampos redondos atravessados por veios de resina que seguem o desenho da madeira.' },
+    { titulo: 'Mesas de centro', pecas: daCategoria('mesa-centro', 'mesa-apoio'),
+      texto: 'Mesas baixas para a sala, em madeira maciça, com ou sem resina, sozinhas ou em conjunto.' },
+    { titulo: 'Móveis e casa de banho', pecas: daCategoria('aparador', 'casa-de-banho', 'movel'),
+      texto: 'A mesma madeira, com ou sem resina, noutras peças: aparadores, louceiros, tampos e móveis de casa de banho.' },
+  ].filter((t) => t.pecas.length);
+
+  /* A fotografia de cada cor é escolhida à mão — a primeira peça de cada cor
+     nem sempre é a que melhor a mostra. A verificação abaixo impede que uma
+     peça com uma cor nova fique de fora desta página sem ninguém dar por isso. */
+  const CORES = [
+    { resina: 'clara', nome: 'Translúcida', foto: ['mesa-jantar-resina-translucida', '03'] },
+    { resina: 'turquesa', nome: 'Turquesa', foto: ['mesa-jantar-longa-rio-turquesa', '02'] },
+    { resina: 'azul', nome: 'Azul', foto: ['mesa-jantar-rio-azul', '01'] },
+    { resina: 'esmeralda', nome: 'Verde', foto: ['mesa-jantar-rio-esmeralda-pes-dourados', '01'] },
+    { resina: 'preta', nome: 'Escura', foto: ['mesa-redonda-rio-preto', '01'] },
+  ];
+  const semCor = pecas.filter((p) => p.resina && !CORES.some((c) => c.resina === p.resina));
+  if (semCor.length) {
+    throw new Error(`resina sem lugar na página das mesas em resina: ${semCor.map((p) => `${p.slug} (${p.resina})`).join(', ')}`);
+  }
+  const iluminadas = pecas.filter((p) => /iluminad/.test(p.slug));
+  const cartoesCor = [
+    ...CORES.map((c) => ({ ...c, pecas: pecas.filter((p) => p.resina === c.resina) })),
+    ...(iluminadas.length ? [{ nome: 'Com luz', foto: [iluminadas[0].slug, iluminadas[0].fotos[0]], pecas: iluminadas }] : []),
+  ].filter((c) => c.pecas.length);
+
+  const cartaoCor = (c) => {
+    const p = peca(c.foto[0]);
+    if (c.resina && p.resina !== c.resina) throw new Error(`a fotografia da cor ${c.nome} é de uma peça com resina ${p.resina}`);
+    return `<article class="cartao cor">
+  <a class="cartao__link" href="${u('pecas/' + p.slug + '/')}">
+    <div class="cartao__foto"${p.foco ? ` style="--foco: ${esc(p.foco)}"` : ''}>
+      ${foto(p, c.foto[1], { sizes: '(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw', prioritaria: false, alt: nomeComResina(p) })}
+    </div>
+  </a>
+  <h3 class="cor__nome">${esc(c.nome)} <span>${c.pecas.length} ${c.pecas.length === 1 ? 'peça' : 'peças'}</span></h3>
+  <p class="cor__pecas">${enumerar(c.pecas)}</p>
+</article>`;
+  };
+
+  const capa = peca('mesa-jantar-rio-turquesa-moderna');
+
+  const corpo = `
+<section class="secao secao--topo">
+  <div class="envolve">
+    <nav class="migalhas" aria-label="Migalhas"><a href="${u('')}">Início</a> <span>/</span> <span aria-current="page">Mesas em resina epóxi</span></nav>
+    <div class="duas">
+      <div>
+        <p class="sobretitulo">Por encomenda, em Valongo</p>
+        <h1 class="h-pagina">Mesas em resina epóxi, feitas à medida</h1>
+        <p class="lead">Uma mesa em resina epóxi junta uma tábua de madeira maciça — com a borda natural, os nós e as fendas — a uma resina que preenche o que a madeira deixou em aberto. No Pau Ferro Atelier fazemo-las de raiz, por encomenda, à medida do espaço de quem as pede.</p>
+        <div class="capa__accoes">
+          <a class="btn btn--cheio" href="${u('pecas/')}">Ver as peças ${ic.seta}</a>
+          <a class="btn btn--linha" href="${u('contactos/')}">Pedir orçamento</a>
+        </div>
+      </div>
+      <div class="duas__foto">
+        ${foto(capa, capa.fotos[0], { sizes: '(max-width: 900px) 92vw, 44vw', prioritaria: true, alt: nomeComResina(capa) })}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secao secao--tenue">
+  <div class="envolve">
+    <p class="sobretitulo">O que fazemos</p>
+    <h2 class="h-secao h-secao--espaco">Que mesas fazemos</h2>
+    <div class="cartas">
+      ${TIPOS.map((t) => `<div class="carta"><h3>${esc(t.titulo)}</h3>
+        <p>${t.texto}</p>
+        <p class="carta__pecas">Por exemplo: ${enumerar(exemplos(t.pecas, 3))}.</p></div>`).join('\n      ')}
+    </div>
+  </div>
+</section>
+
+<section class="secao">
+  <div class="envolve">
+    <div class="secao__topo">
+      <div>
+        <p class="sobretitulo">Transparente, a cores ou com luz</p>
+        <h2 class="h-secao">A cor da resina</h2>
+        <p class="lead">A resina pode deixar ver o contorno da madeira, ou levar a cor que combinar consigo. Estas são as que já saíram do atelier.</p>
+      </div>
+      <a class="ligacao" href="${u('pecas/')}">Ver todas as ${pecas.length} peças ${ic.seta}</a>
+    </div>
+    <div class="grelha">${cartoesCor.map(cartaoCor).join('')}</div>
+  </div>
+</section>
+
+<section class="secao secao--escura">
+  <div class="envolve">
+    <p class="sobretitulo sobretitulo--claro">Passo a passo</p>
+    <h2 class="h-secao h-secao--claro">Como se faz uma mesa em resina epóxi</h2>
+    <ol class="passos">
+      <li class="passo"><span class="passo__n">1</span><h3>A tábua</h3>
+        <p>Escolhe-se a madeira pelo desenho — a borda natural, os nós, as fendas. É esse desenho que decide onde vai a resina e por onde corre o rio.</p></li>
+      <li class="passo"><span class="passo__n">2</span><h3>O molde e a cor</h3>
+        <p>A madeira é fixada num molde, e a resina, misturada com o endurecedor e com o pigmento da cor combinada, é vazada no vão entre as abas.</p></li>
+      <li class="passo"><span class="passo__n">3</span><h3>O tempo</h3>
+        <p>Vazada em grande espessura, a resina leva dias a endurecer por completo, e não horas. Só depois a peça sai do molde.</p></li>
+      <li class="passo"><span class="passo__n">4</span><h3>O acabamento</h3>
+        <p>O tampo é aplanado e lixado por fases até madeira e resina serem uma superfície contínua, e leva a protecção final. Depois vêm os pés, e a entrega da peça pronta a usar.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="secao">
+  <div class="envolve">
+    <div class="duas duas--topo">
+      <div>
+        <h2 class="h-secao h-secao--espaco">O que faz o preço</h2>
+        <div class="texto">
+        <p>Não há tabela, porque não há duas mesas iguais. O valor de cada uma sai de cinco coisas:</p>
+        <ul>
+          <li><strong>A medida</strong> — comprimento, largura e espessura do tampo.</li>
+          <li><strong>A madeira</strong> — a espécie e o tamanho da tábua.</li>
+          <li><strong>A resina</strong> — um rio largo leva muito mais do que um veio fino; a cor e a luz embutida também contam.</li>
+          <li><strong>Os pés</strong> — metálicos em V, em X, rectos ou dourados, ou um pé central nas mesas redondas.</li>
+          <li><strong>O acabamento.</strong></li>
+        </ul>
+        <p>Diga-nos a medida e a ideia, e respondemos com uma proposta.</p>
+        </div>
+      </div>
+      <div>
+        <h2 class="h-secao h-secao--espaco">Cuidados</h2>
+        <div class="texto">
+        <ul>
+          <li>No dia-a-dia, um pano húmido e um pouco de sabão neutro chegam.</li>
+          <li>Nada de esfregões, pós abrasivos ou solventes como a acetona: riscam a superfície ou tiram-lhe o brilho.</li>
+          <li>Tachos e travessas quentes vão sempre para cima de uma base. A resina não gosta de calor directo e pode ficar marcada.</li>
+          <li>Ao sol directo, todos os dias, a madeira e a resina mudam de tom com o tempo. Junto a uma janela, uma cortina ajuda.</li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="secao secao--tenue">
+  <div class="envolve envolve--texto">
+    <p class="sobretitulo">Perguntas frequentes</p>
+    <h2 class="h-secao h-secao--espaco">O que nos perguntam</h2>
+    <div class="texto perguntas">
+      <h3>Resina epóxi, epoxi ou epoxy: é tudo o mesmo?</h3>
+      <p>É. <i lang="en">Epoxy</i> é a grafia inglesa; em português escreve-se epóxi, e muita gente escreve epoxi, sem acento. É uma resina de dois componentes — a resina e o endurecedor — que, misturados, endurecem numa massa rígida, transparente ou com cor.</p>
+      <h3>O que é uma mesa rio?</h3>
+      <p>É uma mesa em que a resina ocupa o espaço entre duas tábuas de borda natural e corre de uma ponta à outra, como um rio entre duas margens. Em inglês chama-se <i lang="en">river table</i>.</p>
+      <h3>As mesas são feitas à medida?</h3>
+      <p>Todas. Cada peça é fabricada por encomenda, com a medida, a madeira e a cor da resina combinadas consigo. As que se vêem neste site já foram entregues: mostram o que fazemos, e fazemos outra à sua medida.</p>
+      <h3>Posso ver uma mesa ao vivo?</h3>
+      <p>O atelier fica em Valongo, no distrito do Porto, e recebe por marcação. Ligue ou mande mensagem para combinar o dia.</p>
+      <h3>Como peço um orçamento?</h3>
+      <p>Diga-nos o tipo de peça, a medida aproximada e a cor que imagina, por telefone, email ou WhatsApp. Uma fotografia do espaço, ou de uma mesa de que goste, ajuda muito.</p>
+    </div>
+  </div>
+</section>
+
+<section class="secao">
+  <div class="envolve">
+    <div class="faixa">
+      <div>
+        <h2 class="h-secao">Peça um orçamento</h2>
+        <p class="faixa__texto">Com a medida, o tipo de mesa e a cor da resina, respondemos com uma proposta.</p>
+      </div>
+      <div class="faixa__accoes">
+        <a class="btn btn--cheio" href="${u('contactos/')}">Falar connosco ${ic.seta}</a>
+        <a class="btn btn--linha" href="https://wa.me/${def.contactos.whatsapp}" target="_blank" rel="noopener">${ic.zap} WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>`;
+
+  return pagina({
+    pag: PAG_RESINA,
+    titulo: `Mesas em resina epóxi por medida, no Porto | Pau Ferro`,
+    descricao: 'Mesas rio, de jantar, redondas e de centro em madeira maciça e resina epóxi, feitas por encomenda e à medida no atelier Pau Ferro, em Valongo, Porto.',
+    corpo,
+    og: abs(`assets/pecas/${capa.slug}/og.jpg`),
+    jsonld: [
+      {
+        '@context': 'https://schema.org', '@type': 'Service',
+        name: 'Mesas em resina epóxi por medida',
+        serviceType: 'Fabrico de mesas em madeira maciça e resina epóxi',
+        url: abs(PAG_RESINA),
+        image: abs(`assets/pecas/${capa.slug}/${capa.fotos[0]}-1600.jpg`),
+        provider: { '@id': abs('#atelier') },
+      },
+      negocioLD,
+      migalhasLD([{ nome: 'Início', href: '' }, { nome: 'Mesas em resina epóxi' }]),
+    ],
   });
 }
 
@@ -844,6 +1106,7 @@ function main() {
   escrever('index.html', paginaInicial());
   escrever('pecas/index.html', paginaPecas());
   escrever('atelier/index.html', paginaAtelier());
+  escrever(`${PAG_RESINA}index.html`, paginaResina());
   escrever('contactos/index.html', paginaContactos());
   for (const p of pecas) escrever(`pecas/${p.slug}/index.html`, paginaPeca(p));
 
@@ -856,14 +1119,23 @@ function main() {
     escrever(`${pag}index.html`, paginaTexto(f, pag));
   }
 
-  const urls = ['', 'pecas/', 'atelier/', 'contactos/', ...Object.values(legais),
+  const urls = ['', 'pecas/', PAG_RESINA, 'atelier/', 'contactos/', ...Object.values(legais),
     ...pecas.map((p) => `pecas/${p.slug}/`)];
-  const hoje = new Date().toISOString().slice(0, 10);
+  /* Sem `<lastmod>` aqui, de propósito. A data de hoje em todas as páginas
+     dizia ao Google «mudou tudo» a cada publicação, e ele aprende a ignorar um
+     sitemap que mente. A data verdadeira só se sabe comparando cada página
+     com a que está no ar, e isso faz-se na publicação: `scripts/datas.mjs`. */
   escrever('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((p) => `  <url><loc>${abs(p)}</loc><lastmod>${hoje}</lastmod></url>`).join('\n')}
+${urls.map((p) => `  <url><loc>${abs(p)}</loc></url>`).join('\n')}
 </urlset>
 `);
+
+  /* A chave do IndexNow, que avisa o Bing (e o DuckDuckGo, o Ecosia e o Yahoo,
+     que usam o índice dele) das páginas que mudaram. É pública por desenho:
+     é este ficheiro, servido na raiz do domínio, que prova quem manda nele. */
+  const { chave } = ler('data/indexnow.json');
+  escrever(`${chave}.txt`, chave);
   /* Página 404 própria. O GitHub Pages serve `/404.html` em qualquer caminho
      que não exista, e sem ela quem escreve mal um endereço cai na página cinzenta
      genérica do GitHub — sem navegação, sem contactos e sem forma de voltar. */

@@ -11,6 +11,7 @@ página que o visitante recebe é a que está no disco.
 
 ```bash
 node scripts/gerar.mjs                 # escreve _site/
+node scripts/datas.mjs                 # opcional: data o sitemap contra o que está no ar
 node scripts/auditar.mjs               # verifica o que foi escrito
 python3 -m http.server 4300 --directory _site
 ```
@@ -23,11 +24,14 @@ descobre-os sozinho (ver «Onde o site vive», abaixo).
 ```
 data/definicoes.json     contactos, localização, redes, textos da entrada
 data/pecas/*.json        uma peça por ficheiro — 26 no total
+data/indexnow.json       a chave pública do IndexNow (avisos ao Bing)
 conteudo/*.md            os três textos legais
 assets/pecas/<slug>/     as fotografias já tratadas (AVIF, WebP, JPEG × 3 larguras)
 _fonte/originais/        as fotografias como vieram do cliente
 scripts/gerar.mjs        o gerador
+scripts/datas.mjs        as datas do sitemap, pela diferença para o que está no ar
 scripts/auditar.mjs      o travão que corre antes de publicar
+scripts/indexnow.mjs     avisa o Bing das páginas que mudaram, depois de publicar
 scripts/imagens.py       fotografias originais → os três formatos
 scripts/dimensoes.py     escreve as medidas reais de cada fotografia no JSON
 scripts/logotipo.py      logótipo do cliente → dois PNG com transparência
@@ -99,6 +103,32 @@ endereço fica num atributo e só vira `<iframe>` depois do clique.
 
 **O telefone nunca aparece sem «(Chamada para a rede móvel nacional)».** Há uma
 função só para isso, e a auditoria falha se algum número escapar.
+
+## Pesquisa no Google
+
+O cliente queixou-se, em outubro de 2026, de que «mesas em resina epoxy» nunca
+mostrava o site. Foi medido a 20 out 2026, com o Search Console e a pesquisa
+sem personalização:
+
+- nessa pesquisa o site não aparecia nos primeiros 74 resultados; com «porto»
+  no fim aparecia em **2.º**, logo a seguir ao OLX;
+- das 26 peças, **22 nunca tinham sido visitadas** pelo Google («detetada –
+  atualmente não indexada») — só a entrada, as páginas gerais e 4 peças;
+- em dois meses, 218 aparições e 34 cliques, quase todos de quem já
+  procurava o nome «Pau Ferro»;
+- a grafia não era o problema: o Google trata «epoxy», «epoxi» e «epóxi»
+  como a mesma palavra.
+
+O que se fez por causa disso, e que a auditoria vigia para não se desfazer:
+a página **`/mesas-resina-epoxi/`** (no menu de todas as páginas, e ligada a
+cada peça), «resina epóxi» no título de todas as peças com resina, e um
+sitemap com datas verdadeiras. As datas saem de `scripts/datas.mjs`, que na
+publicação compara cada página com a que está no ar: só as que mudaram ganham
+a data de agora, e só essas vão para o Bing pelo IndexNow, depois de publicar.
+
+O resto não depende do código: avaliações no Perfil de Empresa do Google, os
+serviços desse perfil em português, e a ligação do Instagram a apontar para o
+site. Está em [`_plano/PENDENTE-CLIENTE.md`](_plano/PENDENTE-CLIENTE.md).
 
 ## O que falta
 

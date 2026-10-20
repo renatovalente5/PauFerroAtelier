@@ -21,6 +21,8 @@ concurrency:
 jobs:
   construir:
     runs-on: ubuntu-latest
+    outputs:
+      alteradas: ${{ steps.datas.outputs.alteradas }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,6 +35,13 @@ jobs:
       # construído para a raiz de um domínio ou para o endereço de projecto.
       - name: Gerar o site
         run: node scripts/gerar.mjs
+
+      # As datas do sitemap saem da comparação de cada página com a que está
+      # no ar — e por isso este passo tem de correr ANTES de publicar. Deixa a
+      # lista das páginas que mudaram para o aviso ao Bing, lá em baixo.
+      - name: Datar o sitemap pelo que mudou
+        id: datas
+        run: node scripts/datas.mjs
 
       # O travão. Verifica ligações, imagens, contraste de atributos, o prefixo
       # dos caminhos, o sitemap e a nota do custo das chamadas. Se falhar, não
@@ -55,3 +64,21 @@ jobs:
     steps:
       - id: publicacao
         uses: actions/deploy-pages@v4
+
+  # Só depois de publicado: avisar antes punha o Bing a buscar a versão antiga.
+  # Sem páginas mudadas, o passo nem arranca.
+  avisar:
+    needs: [construir, publicar]
+    if: needs.construir.outputs.alteradas != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Avisar o Bing das páginas que mudaram (IndexNow)
+        env:
+          ALTERADAS: ${{ needs.construir.outputs.alteradas }}
+        run: node scripts/indexnow.mjs

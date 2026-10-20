@@ -132,9 +132,14 @@ for (const f of paginas) {
 
   const titulo = (h.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
   if (titulo.length > 60) aviso(n, `título com ${titulo.length} caracteres (o Google corta perto dos 60)`);
-  /* Basta a raiz da marca: dois títulos de peça usam «Pau Ferro» em vez do
-     nome completo, para caberem nos 60 caracteres sem cortar o nome da peça. */
-  if (!titulo.includes('Pau Ferro')) aviso(n, 'título sem o nome do atelier');
+  /* Basta a raiz da marca: vários títulos de peça usam «Pau Ferro» em vez do
+     nome completo, para caberem nos 60 caracteres sem cortar o nome da peça.
+     E nos nomes mais longos, com «em resina epóxi», a marca sai de todo — o
+     Google mostra o nome do sítio por cima do título. Só se avisa quando a
+     marca cabia e mesmo assim falta. */
+  if (!titulo.includes('Pau Ferro') && `${titulo} | Pau Ferro`.length <= 60) {
+    aviso(n, 'título sem o nome do atelier, e cabia');
+  }
   const desc = (h.match(/<meta name="description" content="([^"]*)"/) || [])[1] || '';
   if (desc.length > 160) aviso(n, `description com ${desc.length} caracteres (o Google corta aos 160)`);
 
@@ -240,6 +245,49 @@ const noMapa = [...mapa.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, v]) => new URL
 const noDisco = paginas.map((p) => rel(p).replace(/index\.html$/, '')).filter((p) => p !== '/404.html');
 for (const p of noDisco) if (!noMapa.includes(p)) mal('sitemap.xml', `falta ${p}`);
 for (const p of noMapa) if (!noDisco.includes(p)) mal('sitemap.xml', `${p} não existe`);
+
+/* 11b. as datas do sitemap. Podem faltar — sem o sitemap do ar para comparar,
+        `scripts/datas.mjs` deixa-as de fora em vez de as inventar —, mas uma
+        data que lá esteja tem de ser uma data, e não pode ser do futuro. */
+for (const [, data] of mapa.matchAll(/<lastmod>([^<]*)<\/lastmod>/g)) {
+  const t = Date.parse(data);
+  if (!Number.isFinite(t)) mal('sitemap.xml', `lastmod que não é uma data: ${data}`);
+  else if (t > Date.now() + 60 * 60 * 1000) mal('sitemap.xml', `lastmod no futuro: ${data}`);
+}
+
+/* 11c. a pesquisa por que o site existe. Medido a 20 out 2026: «mesas em
+        resina epoxy» não encontrava o site, e nenhum título de peça dizia
+        «resina epóxi». Isto vigia as três coisas que se fizeram por causa
+        disso, para não se desfazerem caladas numa arrumação futura:
+        a página das mesas em resina existe e está no menu de todas as
+        páginas, e cada peça com resina leva o material no título. */
+{
+  const RESINA = '/mesas-resina-epoxi/';
+  if (!existsSync(join(SAIDA, RESINA, 'index.html'))) mal(RESINA, 'a página das mesas em resina não foi gerada');
+  for (const f of paginas) {
+    const h = readFileSync(f, 'utf8');
+    const nav = (h.match(/<nav class="topo__nav"[\s\S]*?<\/nav>/) || [''])[0];
+    if (!nav.includes(`href="${PREFIXO}${RESINA}"`)) mal(rel(f), 'o menu não tem a ligação para as mesas em resina');
+  }
+  for (const f of readdirSync(join(RAIZ_PROJ, 'data/pecas')).filter((x) => x.endsWith('.json'))) {
+    const peca = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/pecas', f), 'utf8'));
+    if (!peca.resina || peca.publicado === false) continue;
+    const h = readFileSync(join(SAIDA, 'pecas', peca.slug, 'index.html'), 'utf8');
+    const titulo = (h.match(/<title>([^<]*)<\/title>/) || [])[1] || '';
+    if (!titulo.includes('resina epóxi')) mal(`/pecas/${peca.slug}/`, `o título não diz «resina epóxi»: ${titulo}`);
+  }
+}
+
+/* 11d. a chave do IndexNow tem de estar servida na raiz, com a chave dentro —
+        é assim que o Bing confirma que o aviso vem de quem manda no domínio. */
+{
+  const { chave } = JSON.parse(readFileSync(join(RAIZ_PROJ, 'data/indexnow.json'), 'utf8'));
+  if (!/^[0-9a-f]{32}$/.test(chave)) mal('data/indexnow.json', 'a chave do IndexNow não tem o formato esperado');
+  const ficheiro = join(SAIDA, `${chave}.txt`);
+  if (!existsSync(ficheiro) || readFileSync(ficheiro, 'utf8').trim() !== chave) {
+    mal(`/${chave}.txt`, 'o ficheiro da chave do IndexNow falta ou não tem a chave');
+  }
+}
 
 /* 12. peso: o que o visitante descarrega na primeira página */
 const inicio = readFileSync(join(SAIDA, 'index.html'), 'utf8');
