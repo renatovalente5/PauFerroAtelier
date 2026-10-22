@@ -494,12 +494,11 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
 }
 .mapa__retirar:hover { border-color: var(--tinta); }
 .mapa__retirar:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
-/* o Livro de Reclamações na página de contactos (legal-comum, .lr-botao) */
+/* o Livro de Reclamações na página de contactos (legal-comum, .lr-discreto):
+   com a cor da ligação do parágrafo ao lado */
 .contacto__livro { margin-top: 2.2rem; padding-top: 1.6rem; border-top: 1px solid var(--borda); }
 .contacto__livro p { font-size: .9rem; color: var(--tinta-2); max-width: 48ch; margin-bottom: 1rem; }
-.contacto__livro a:not(.lr-botao) { color: var(--petroleo); text-decoration: underline; text-underline-offset: 2px; }
-.contacto__livro .lr-botao { border-radius: var(--raio); }
-.contacto__livro .lr-botao:hover { background: var(--petroleo); }
+.contacto__livro a { color: var(--petroleo); text-decoration: underline; text-underline-offset: 2px; }
 
 /* ------------------------------------------------------------------ texto */
 .texto h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 1.2rem; }
@@ -544,14 +543,9 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
 }
 .rodape__links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: center; }
 /* A última linha da página fica por baixo do «voltar ao topo» (fixo, 46 px, à
-   direita): sem esta folga, no fim da página ele tapava o botão do Livro. */
+   direita): sem esta folga, no fim da página ele tapava a ligação do Livro
+   (medido a 390 px). */
 .rodape__legal { padding-right: calc(46px + .75rem); }
-/* O botão do Livro de Reclamações (legal-comum, livroCss escreve .rodape__livro):
-   `.rodape a` pintava-lhe a letra de papel a 72 % sobre papel, por isso a cor
-   volta a ser dita aqui, com mais peso; o raio e o peso da letra são os da casa. */
-.rodape .rodape__livro, .rodape .rodape__livro:hover { color: var(--tinta); }
-.rodape .rodape__livro { border-radius: var(--raio); font-weight: 600; }
-.rodape .rodape__livro:hover { background: #fff; }
 
 /* ---------------------------------------------------- voltar ao topo */
 .subir {

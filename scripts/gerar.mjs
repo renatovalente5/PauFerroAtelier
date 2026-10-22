@@ -15,8 +15,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
-/* As peças legais comuns aos sites do Renato (legal-comum): o botão do Livro de
-   Reclamações, a lista dos centros de arbitragem, a garantia, os destinatários e
+/* As peças legais comuns aos sites do Renato (legal-comum): a ligação do Livro
+   de Reclamações, a lista dos centros de arbitragem, a garantia, os destinatários e
    os direitos da política de privacidade. A cópia vive em `legal-comum/` e a
    versão em `.legal-comum.json`; instala-se e actualiza-se com o `instalar.mjs`
    da biblioteca, nunca à mão. */
@@ -25,8 +25,8 @@ import {
   destinatariosHtml, direitosHtml, FRASE_PAGINA_META, VERSAO,
 } from '../legal-comum/index.mjs';
 
-/* O botão do Livro entre os marcadores que o CLI da biblioteca escreve, para
-   que uma verificação no site publicado (e o verificar-versoes) o encontre. */
+/* O Livro entre os marcadores que o CLI da biblioteca escreve, para que uma
+   verificação no site publicado (e o verificar-versoes) o encontre. */
 const livro = (opcoes) => `<!-- legal-comum:livro v${VERSAO} -->${livroReclamacoes(opcoes)}<!-- /legal-comum:livro -->`;
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -259,10 +259,11 @@ function rodape() {
       <p>&copy; ${new Date().getFullYear()} ${esc(def.empresa.nome)} · NIF ${esc(def.empresa.nif)}</p>
       <ul class="rodape__links">
         ${legais.map(([h, r]) => `<li><a href="${u(h)}">${r}</a></li>`).join('')}
-        <!-- O Livro de Reclamações em botão, com ícone, e não numa ligação de
-             texto igual às outras: a lei pede o acesso «em local visível e de
-             forma destacada» (DL 156/2005, art. 5.º-B). -->
-        <li>${livro({ classe: 'rodape__livro' })}</li>
+        <!-- O Livro de Reclamações discreto (.lr-discreto): a letra e a cor das
+             ligações ao lado, sem caixa; o pequeno ícone de livro é o que o
+             destaca, como a lei pede («em local visível e de forma destacada»,
+             DL 156/2005, art. 5.º-B). -->
+        <li>${livro()}</li>
       </ul>
     </div>
   </div>
@@ -270,15 +271,13 @@ function rodape() {
 }
 
 /* --------------------------------------------------------------- esqueleto */
-/* O CSS do botão do Livro de Reclamações vem da biblioteca e vai na cabeça de
-   cada página, para ficar sempre da versão da cópia instalada. Dois pares de
-   cores, os dois medidos pela própria `livroCss` (recusa menos de 4,5:1): papel
-   sobre tinta nos contactos, tinta sobre papel no rodapé escuro. As afinações
-   da casa (raio, peso, a cor que `.rodape a` pisava) estão em estilo.css. */
-const CSS_LEGAL = [
-  livroCss('lr-botao', { cor: '#FAF9F6', fundo: '#1C1A18' }),
-  livroCss('rodape__livro', { cor: '#1C1A18', fundo: '#FAF9F6' }),
-].join('\n');
+/* O CSS do Livro de Reclamações vem da biblioteca e vai na cabeça de cada
+   página, para ficar sempre da versão da cópia instalada: só as regras da
+   ligação discreta (.lr-discreto) e do texto para leitores de ecrã (.lr-sr),
+   sem as do botão, que o site já não usa. A cor é a das ligações vizinhas
+   (`.rodape a` no rodapé, `.contacto__livro a` nos contactos, em estilo.css). */
+const CSS_LEGAL = livroCss().split('\n').filter((r) => /^\.lr-(discreto|sr)\b/.test(r)).join('\n');
+if (!CSS_LEGAL.includes('.lr-discreto')) throw new Error('legal-comum: o livroCss() já não traz as regras de .lr-discreto');
 
 function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = '', naoIndexar = false }) {
   const url = abs(pag);
