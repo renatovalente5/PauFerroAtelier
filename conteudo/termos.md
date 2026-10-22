@@ -5,7 +5,7 @@ descricao: Condições de encomenda de peças por medida ao Pau Ferro Atelier, g
 
 # Termos e condições
 
-_Última actualização: 7 de agosto de 2026_
+_Última actualização: 22 de outubro de 2026_
 
 ## Quem somos
 
@@ -42,7 +42,9 @@ Cada peça é única precisamente por isto. Uma peça encomendada a partir de um
 
 Aplica-se a **garantia legal de conformidade** prevista no **Decreto-Lei n.º 84/2021**, de 18 de outubro. Se a peça não estiver conforme o acordado, pode exigir, sem encargos, a reposição da conformidade por reparação ou substituição e, quando estas não forem possíveis ou proporcionadas, a redução do preço ou a resolução do contrato.
 
-O prazo e as condições concretas constam do documento de venda entregue com a peça.
+{{GARANTIA}}
+
+As condições concretas da peça constam do documento de venda entregue com ela.
 
 ## Direito de livre resolução: não se aplica a peças por medida
 

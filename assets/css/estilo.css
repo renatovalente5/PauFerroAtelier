@@ -482,6 +482,24 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
 .mapa__aviso svg { width: 34px; height: 34px; color: var(--petroleo); margin-bottom: .8rem; }
 .mapa__aviso p { font-size: .9rem; color: var(--tinta-2); max-width: 40ch; margin-bottom: 1.2rem; }
 .mapa__botoes { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+/* «Deixar de carregar o mapa»: só aparece com o mapa carregado, por cima dele,
+   ao centro em baixo — a faixa que o embed do Google deixa livre entre o
+   logótipo (à esquerda) e os termos (à direita). */
+.mapa__retirar {
+  position: absolute; left: 50%; bottom: .75rem; transform: translateX(-50%); z-index: 2;
+  min-height: 44px; padding: .55rem 1rem; cursor: pointer;
+  background: var(--carta); color: var(--tinta); border: 1px solid var(--borda-forte); border-radius: var(--raio);
+  font: inherit; font-size: max(14px, .85rem); font-weight: 600; white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.mapa__retirar:hover { border-color: var(--tinta); }
+.mapa__retirar:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+/* o Livro de Reclamações na página de contactos (legal-comum, .lr-botao) */
+.contacto__livro { margin-top: 2.2rem; padding-top: 1.6rem; border-top: 1px solid var(--borda); }
+.contacto__livro p { font-size: .9rem; color: var(--tinta-2); max-width: 48ch; margin-bottom: 1rem; }
+.contacto__livro a:not(.lr-botao) { color: var(--petroleo); text-decoration: underline; text-underline-offset: 2px; }
+.contacto__livro .lr-botao { border-radius: var(--raio); }
+.contacto__livro .lr-botao:hover { background: var(--petroleo); }
 
 /* ------------------------------------------------------------------ texto */
 .texto h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 1.2rem; }
@@ -524,7 +542,16 @@ body.menu-aberto .menu { opacity: 1; visibility: visible; }
   display: flex; flex-wrap: wrap; gap: .7rem 1.6rem; align-items: center; justify-content: space-between;
   font-size: .84rem;
 }
-.rodape__links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+.rodape__links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; align-items: center; }
+/* A última linha da página fica por baixo do «voltar ao topo» (fixo, 46 px, à
+   direita): sem esta folga, no fim da página ele tapava o botão do Livro. */
+.rodape__legal { padding-right: calc(46px + .75rem); }
+/* O botão do Livro de Reclamações (legal-comum, livroCss escreve .rodape__livro):
+   `.rodape a` pintava-lhe a letra de papel a 72 % sobre papel, por isso a cor
+   volta a ser dita aqui, com mais peso; o raio e o peso da letra são os da casa. */
+.rodape .rodape__livro, .rodape .rodape__livro:hover { color: var(--tinta); }
+.rodape .rodape__livro { border-radius: var(--raio); font-weight: 600; }
+.rodape .rodape__livro:hover { background: #fff; }
 
 /* ---------------------------------------------------- voltar ao topo */
 .subir {

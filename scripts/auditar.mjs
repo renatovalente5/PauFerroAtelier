@@ -10,6 +10,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CENTROS, LISTA_DGC_URL, CNPD_URL, verificarIdentificacao } from '../legal-comum/index.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SAIDA = join(RAIZ, '_site');
@@ -61,9 +62,13 @@ const EXTERNOS_OK = [
   'www.livroreclamacoes.pt',  // imposto por lei
   'www.google.com',           // mapa, só depois de consentimento
   'policies.google.com',
-  'www.cnpd.pt', 'www.cicap.pt', 'www.consumidor.gov.pt',
   'www.instagram.com', 'www.facebook.com',
   'schema.org', 'https://schema.org',
+  /* os centros de arbitragem, a lista da DGC e a CNPD, tal como a biblioteca
+     legal-comum os liga — lidos dela, para não discordarem do que foi gerado */
+  ...CENTROS.map((c) => new URL(c.sitio).host),
+  new URL(LISTA_DGC_URL).host,
+  new URL(CNPD_URL).host,
 ];
 
 for (const f of paginas) {
@@ -180,6 +185,25 @@ for (const f of paginas) {
     if (!h.includes(t)) mal(rel(f), `o rodapé não tem a ligação "${t}"`);
   }
   if (/Capital social|capital social/.test(h)) mal(rel(f), 'menciona capital social (o cliente é em nome individual)');
+}
+
+/* 10c. a identificação do prestador (DL 7/2004, art. 10.º: nome, morada
+        geográfica, email em texto e NIF), pela guarda da biblioteca legal-comum.
+        Em modo «avisar», e não «bloquear», porque o site já está no ar e o nome
+        civil e a morada do titular estão por decidir com o cliente desde agosto
+        (_plano/PENDENTE-CLIENTE.md): a auditoria lembra-o a cada publicação sem
+        a travar. Quando ele os der, entram em data/definicoes.json («empresa»:
+        «titular» e «morada») e o modo passa a «bloquear». */
+{
+  const { problemas: faltas } = verificarIdentificacao({
+    nome: DEF.empresa.titular,      // o nome civil do ENI; «Pau Ferro Atelier» é só o nome comercial
+    formaJuridica: 'eni',
+    nif: DEF.empresa.nif,
+    morada: DEF.empresa.morada,     // por indicar: «A morada é combinada directamente com o cliente»
+    email: DEF.contactos.email,
+    telefone: DEF.contactos.telefone,
+  }, { modo: 'avisar', ecra: 'data/definicoes.json › empresa' });
+  for (const p of faltas) aviso('identificação', `${p.campo}: ${p.mensagem}`);
 }
 
 /* 10a. os dados das peças, antes de olhar para o HTML.

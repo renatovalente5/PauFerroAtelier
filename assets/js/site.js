@@ -170,6 +170,7 @@
   if (mapa) {
     const CHAVE = 'pf:mapa';
     const aviso = $('#mapa-aviso');
+    const btnRetirar = $('#btn-mapa-retirar');
 
     function carregar() {
       if ($('iframe', mapa)) return;
@@ -181,12 +182,24 @@
       f.allowFullscreen = true;
       mapa.appendChild(f);
       if (aviso) aviso.hidden = true;
+      if (btnRetirar) btnRetirar.hidden = false;
+    }
+
+    /* Retirar a autorização tem de ser tão fácil como dá-la (RGPD, art. 7.º,
+       n.º 3): apaga-se a escolha guardada, tira-se o iframe do Google e volta o
+       aviso com o botão de carregar. A partir daqui o mapa não volta sozinho. */
+    function retirar() {
+      try { localStorage.removeItem(CHAVE); } catch { /* navegação privada */ }
+      $('iframe', mapa)?.remove();
+      if (aviso) aviso.hidden = false;
+      if (btnRetirar) btnRetirar.hidden = true;
     }
 
     $('#btn-mapa')?.addEventListener('click', () => {
       try { localStorage.setItem(CHAVE, '1'); } catch { /* navegação privada */ }
       carregar();
     });
+    btnRetirar?.addEventListener('click', retirar);
 
     let guardado = null;
     try { guardado = localStorage.getItem(CHAVE); } catch { /* idem */ }

@@ -5,7 +5,7 @@ descricao: Que dados o sítio do Pau Ferro Atelier recolhe, o que guarda no seu 
 
 # Política de privacidade
 
-_Última actualização: 7 de agosto de 2026_
+_Última actualização: 22 de outubro de 2026_
 
 ## Quem trata os seus dados
 
@@ -23,9 +23,9 @@ Este sítio é uma montra e **não tem formulários**. Não usa análise de trá
 
 ## As duas excepções, ditas com clareza
 
-**O mapa.** Na página de contactos há um mapa fornecido pelo Google. Só é carregado **depois de o autorizar**: enquanto não carregar no botão, nada é pedido ao Google e nenhum cookie é instalado. Se o autorizar, aplicam-se as políticas do Google, que pode consultar em [policies.google.com/privacy](https://policies.google.com/privacy).
+**O mapa.** Na página de contactos há um mapa fornecido pela Google. Só é carregado **depois de o autorizar**, em «Carregar o mapa»: enquanto não carregar no botão, nada é pedido à Google e nenhum cookie é instalado. Se o autorizar, a Google (Google Ireland Ltd., com a Google LLC nos Estados Unidos) recebe o seu endereço IP e pode instalar cookies no seu aparelho; a transferência para os Estados Unidos assenta no Data Privacy Framework UE-EUA, de que a Google LLC consta. Aplicam-se então as políticas da Google, que pode consultar em [policies.google.com/privacy](https://policies.google.com/privacy).
 
-**O que fica no seu navegador.** Se autorizar o mapa, essa escolha fica guardada no *armazenamento local* do seu próprio navegador, com a chave `pf:mapa`. Não é um cookie e nunca é enviada para nós nem para ninguém — serve apenas para não lhe voltarmos a perguntar. Fica no seu equipamento até a apagar nas definições do navegador.
+**O que fica no seu navegador.** Se autorizar o mapa, essa escolha fica guardada no armazenamento local do seu próprio navegador, com a chave `pf:mapa`. Não é um cookie e nunca é enviada para nós nem para ninguém — serve apenas para não lhe voltarmos a perguntar. **Pode retirar a autorização a qualquer momento**, carregando em «Deixar de carregar o mapa», junto ao mapa: a escolha é apagada do seu aparelho e o mapa deixa de ser carregado na hora. Também a pode apagar nas definições do navegador.
 
 ## Quando nos contacta
 
@@ -37,20 +37,24 @@ O **WhatsApp** é um serviço da Meta. Se optar por falar connosco por aí, a co
 
 ## Durante quanto tempo
 
-Pedidos de orçamento que não deram origem a encomenda: até 1 ano. Documentos de venda e facturação: 10 anos, por imposição fiscal. Documentação de garantia: durante o prazo de garantia e mais 3 anos.
+Pedidos de orçamento e contactos que não deram origem a encomenda: 12 meses depois da última troca de mensagens. Encomendas, documentos de venda e facturas: 10 anos, por obrigação fiscal (Código do IVA, artigo 52.º). Documentação de garantia: durante o prazo da garantia legal, de 3 anos a contar da entrega, e mais 3 anos.
 
 ## A quem comunicamos
 
 Só a quem é necessário: contabilidade, transportadora quando há entrega, e autoridades quando a lei obriga. Não vendemos nem cedemos dados para fins comerciais de terceiros.
 
+Os serviços de que nos servimos, e que por isso tratam dados por nossa conta ou os recebem, são estes:
+
+{{DESTINATARIOS}}
+
+{{META}}
+
 ## Os seus direitos
 
-Pode pedir-nos o acesso aos seus dados, a rectificação, o apagamento, a limitação do tratamento, a portabilidade, e opor-se ao tratamento. Basta contactar-nos pelos meios acima.
-
-Se entender que os seus dados não estão a ser tratados correctamente, pode reclamar junto da **Comissão Nacional de Protecção de Dados** — [www.cnpd.pt](https://www.cnpd.pt).
+{{DIREITOS}}
 
 ## Alojamento
 
 O sítio está alojado no GitHub Pages (GitHub, Inc.). O alojamento implica o processamento técnico do endereço IP nos registos do servidor, necessário para entregar as páginas e para segurança. Não temos acesso a esses registos nem os usamos para analisar visitas.
 
-O GitHub tem sede nos Estados Unidos, pelo que este processamento envolve uma transferência para fora do Espaço Económico Europeu. A transferência está coberta pelas cláusulas contratuais-tipo da Comissão Europeia e pela adesão do GitHub ao **Data Privacy Framework** UE-EUA.
+O GitHub tem sede nos Estados Unidos, pelo que este processamento envolve uma transferência para fora do Espaço Económico Europeu. A transferência assenta na certificação do GitHub no **Data Privacy Framework** UE-EUA.

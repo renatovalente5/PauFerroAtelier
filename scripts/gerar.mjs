@@ -15,6 +15,19 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+/* As peças legais comuns aos sites do Renato (legal-comum): o botão do Livro de
+   Reclamações, a lista dos centros de arbitragem, a garantia, os destinatários e
+   os direitos da política de privacidade. A cópia vive em `legal-comum/` e a
+   versão em `.legal-comum.json`; instala-se e actualiza-se com o `instalar.mjs`
+   da biblioteca, nunca à mão. */
+import {
+  livroReclamacoes, livroCss, ralHtml, GARANTIA_BENS,
+  destinatariosHtml, direitosHtml, FRASE_PAGINA_META, VERSAO,
+} from '../legal-comum/index.mjs';
+
+/* O botão do Livro entre os marcadores que o CLI da biblioteca escreve, para
+   que uma verificação no site publicado (e o verificar-versoes) o encontre. */
+const livro = (opcoes) => `<!-- legal-comum:livro v${VERSAO} -->${livroReclamacoes(opcoes)}<!-- /legal-comum:livro -->`;
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SAIDA = join(RAIZ, '_site');
@@ -246,7 +259,10 @@ function rodape() {
       <p>&copy; ${new Date().getFullYear()} ${esc(def.empresa.nome)} · NIF ${esc(def.empresa.nif)}</p>
       <ul class="rodape__links">
         ${legais.map(([h, r]) => `<li><a href="${u(h)}">${r}</a></li>`).join('')}
-        <li><a href="https://www.livroreclamacoes.pt/inicio" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+        <!-- O Livro de Reclamações em botão, com ícone, e não numa ligação de
+             texto igual às outras: a lei pede o acesso «em local visível e de
+             forma destacada» (DL 156/2005, art. 5.º-B). -->
+        <li>${livro({ classe: 'rodape__livro' })}</li>
       </ul>
     </div>
   </div>
@@ -254,6 +270,16 @@ function rodape() {
 }
 
 /* --------------------------------------------------------------- esqueleto */
+/* O CSS do botão do Livro de Reclamações vem da biblioteca e vai na cabeça de
+   cada página, para ficar sempre da versão da cópia instalada. Dois pares de
+   cores, os dois medidos pela própria `livroCss` (recusa menos de 4,5:1): papel
+   sobre tinta nos contactos, tinta sobre papel no rodapé escuro. As afinações
+   da casa (raio, peso, a cor que `.rodape a` pisava) estão em estilo.css. */
+const CSS_LEGAL = [
+  livroCss('lr-botao', { cor: '#FAF9F6', fundo: '#1C1A18' }),
+  livroCss('rodape__livro', { cor: '#1C1A18', fundo: '#FAF9F6' }),
+].join('\n');
+
 function pagina({ pag = '', titulo, descricao, corpo, jsonld = [], og, classe = '', naoIndexar = false }) {
   const url = abs(pag);
   const imagem = og ?? abs('assets/img/og.jpg');
@@ -282,6 +308,7 @@ ${naoIndexar ? '<meta name="robots" content="noindex">' : ''}${dominio ? '' : '<
 <link rel="icon" href="${u('assets/img/favicon-96.png')}" sizes="96x96" type="image/png">
 <link rel="apple-touch-icon" href="${u('assets/img/apple-touch-icon.png')}">
 <link rel="stylesheet" href="${versao('assets/css/estilo.css')}">
+<style>${CSS_LEGAL}</style>
 ${jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('\n')}
 </head>
 <body class="${classe}">
@@ -985,16 +1012,22 @@ function paginaResina() {
    porta, porque o atelier recebe por marcação. */
 function mapa() {
   const q = encodeURIComponent(`${def.local.localidade}, ${def.local.distrito}, Portugal`);
+  /* A autorização tem de poder retirar-se com a mesma facilidade com que se dá
+     (RGPD, art. 7.º, n.º 3): o botão «Deixar de carregar o mapa» nasce
+     escondido e aparece com o mapa; apaga a escolha guardada e tira o iframe na
+     hora (assets/js/site.js). A política de privacidade diz o mesmo com as
+     mesmas palavras. */
   return `<div class="mapa" id="mapa" data-mapa="https://www.google.com/maps?q=${q}&z=12&output=embed">
   <div class="mapa__aviso" id="mapa-aviso">
     ${ic.pin}
     <p><b>Mapa do Google</b><br>
-      Fica por carregar até o autorizar, porque vem dos servidores do Google e pode instalar cookies.</p>
+      Fica por carregar até o autorizar: vem dos servidores da Google, que recebe o seu endereço IP e pode instalar cookies. A escolha fica guardada neste aparelho até a retirar.</p>
     <div class="mapa__botoes">
       <button class="btn btn--cheio" type="button" id="btn-mapa">Carregar o mapa</button>
       <a class="btn btn--linha" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Abrir no Google Maps</a>
     </div>
   </div>
+  <button class="mapa__retirar" type="button" id="btn-mapa-retirar" hidden>Deixar de carregar o mapa</button>
 </div>`;
 }
 
@@ -1030,6 +1063,13 @@ function paginaContactos() {
           <span>Siga o atelier</span>
           <a href="${esc(def.redes.instagram)}" target="_blank" rel="noopener" aria-label="Instagram do Pau Ferro Atelier">${ic.ig}</a>
           <a href="${esc(def.redes.facebook)}" target="_blank" rel="noopener" aria-label="Facebook do Pau Ferro Atelier">${ic.fb}</a>
+        </div>
+
+        <!-- O Livro também aqui, na página de apoio ao cliente, como a DGC
+             recomenda; a ligação é a mesma do rodapé. -->
+        <div class="contacto__livro">
+          <p>Se algo correu mal, fale connosco primeiro. Pode também reclamar no Livro de Reclamações electrónico, ou ver como se resolve um litígio em <a href="${u('resolucao-de-litigios/')}">Resolução de litígios</a>.</p>
+          ${livro()}
         </div>
       </div>
       <div class="painel-contacto__mapa">${mapa()}</div>
@@ -1070,6 +1110,31 @@ function marcarDown(md) {
   return html;
 }
 
+/* Os blocos que os textos legais não escrevem à mão: um parágrafo que seja só
+   `{{NOME}}` é trocado pelo HTML da biblioteca legal-comum. Assim a lista dos
+   centros de arbitragem, a garantia, os destinatários e os direitos são os
+   mesmos em todos os sites e mudam quando a biblioteca muda — e um nome
+   desconhecido pára a geração em vez de publicar a chave à vista. */
+const BLOCOS = {
+  /* Os 10 centros de competência genérica, com o CICAP à cabeça: as encomendas
+     fecham-se à distância com clientes de todo o país (há entregas em Braga e
+     em Coimbra), e o centro competente é o do domicílio do consumidor. */
+  RAL: () => ralHtml({ ambito: 'nacional' }),
+  /* 3 anos a contar da entrega (DL 84/2021), dito antes de o cliente ficar
+     vinculado; a cláusula sobre a madeira fica como está, à espera do advogado. */
+  GARANTIA: () => `<p>${esc(GARANTIA_BENS)}</p>`,
+  /* Quem recebe mesmo dados: o GitHub (alojamento), a Microsoft (a caixa
+     Outlook.com do email), a Google (o mapa, só depois do clique) e a Meta
+     (WhatsApp, Instagram e Facebook). Sem formulários, o Renato não é
+     subcontratante aqui. */
+  DESTINATARIOS: () => destinatariosHtml(
+    { alojamento: 'github-pages', email: 'microsoft', mapas: 'google', whatsapp: true, instagram: true, facebookPage: true },
+    { formato: 'lista' },
+  ),
+  META: () => `<p>${esc(FRASE_PAGINA_META)}</p>`,
+  DIREITOS: () => direitosHtml({ email: def.contactos.email }),
+};
+
 function paginaTexto(ficheiro, pag) {
   const bruto = readFileSync(join(RAIZ, 'conteudo', ficheiro), 'utf8');
   const m = bruto.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
@@ -1078,10 +1143,15 @@ function paginaTexto(ficheiro, pag) {
     const i = l.indexOf(':');
     if (i > 0) meta[l.slice(0, i).trim()] = l.slice(i + 1).trim();
   });
+  const texto = marcarDown(m[2]).replace(/<p>\{\{([A-Z_]+)\}\}<\/p>/g, (_, nome) => {
+    if (!BLOCOS[nome]) throw new Error(`${ficheiro}: bloco {{${nome}}} desconhecido (há ${Object.keys(BLOCOS).join(', ')})`);
+    return BLOCOS[nome]();
+  });
+  if (/\{\{[A-Z_]+\}\}/.test(texto)) throw new Error(`${ficheiro}: ficou uma chave {{…}} por substituir — tem de estar sozinha numa linha`);
   const corpo = `<section class="secao secao--topo">
   <div class="envolve envolve--texto">
     <nav class="migalhas" aria-label="Migalhas"><a href="${u('')}">Início</a> <span>/</span> <span aria-current="page">${esc(meta.titulo)}</span></nav>
-    <article class="texto">${marcarDown(m[2])}</article>
+    <article class="texto">${texto}</article>
   </div>
 </section>`;
   return pagina({
