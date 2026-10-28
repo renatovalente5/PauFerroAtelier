@@ -275,7 +275,9 @@ function rodape() {
    página, para ficar sempre da versão da cópia instalada: só as regras da
    ligação discreta (.lr-discreto) e do texto para leitores de ecrã (.lr-sr),
    sem as do botão, que o site já não usa. A cor é a das ligações vizinhas
-   (`.rodape a` no rodapé, `.contacto__livro a` nos contactos, em estilo.css). */
+   (`.rodape a`, em estilo.css): o Livro está só no rodapé (o Renato, 27 out
+   2026: não também nos contactos; a lei pede-o na página de entrada, e o
+   rodapé da página inicial cumpre isso). */
 const CSS_LEGAL = livroCss().split('\n').filter((r) => /^\.lr-(discreto|sr)\b/.test(r)).join('\n');
 if (!CSS_LEGAL.includes('.lr-discreto')) throw new Error('legal-comum: o livroCss() já não traz as regras de .lr-discreto');
 
@@ -1062,13 +1064,6 @@ function paginaContactos() {
           <span>Siga o atelier</span>
           <a href="${esc(def.redes.instagram)}" target="_blank" rel="noopener" aria-label="Instagram do Pau Ferro Atelier">${ic.ig}</a>
           <a href="${esc(def.redes.facebook)}" target="_blank" rel="noopener" aria-label="Facebook do Pau Ferro Atelier">${ic.fb}</a>
-        </div>
-
-        <!-- O Livro também aqui, na página de apoio ao cliente, como a DGC
-             recomenda; a ligação é a mesma do rodapé. -->
-        <div class="contacto__livro">
-          <p>Se algo correu mal, fale connosco primeiro. Pode também reclamar no Livro de Reclamações electrónico, ou ver como se resolve um litígio em <a href="${u('resolucao-de-litigios/')}">Resolução de litígios</a>.</p>
-          ${livro()}
         </div>
       </div>
       <div class="painel-contacto__mapa">${mapa()}</div>
