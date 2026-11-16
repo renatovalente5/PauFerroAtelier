@@ -1,8 +1,15 @@
 {
   "empresa": {
     "nome": "Pau Ferro Atelier",
+    "titular": "Bruno Miguel Ferreira Leal",
     "nif": "247898511",
-    "actividade": "Mesas em madeira maciça e resina epóxi, por medida"
+    "actividade": "Mesas em madeira maciça e resina epóxi, por medida",
+    "morada": {
+      "rua": "Rua do Girassol",
+      "numero": "53",
+      "codigoPostal": "",
+      "localidade": "Valongo"
+    }
   },
   "contactos": {
     "telefone": "916862737",
@@ -28,7 +35,7 @@
     "pais": "Portugal",
     "latitude": 41.1868,
     "longitude": -8.4977,
-    "nota": "O atelier recebe por marcação. A morada é combinada directamente com o cliente."
+    "nota": "O atelier recebe por marcação."
   },
   "redes": {
     "instagram": "https://www.instagram.com/pauferro_2021",

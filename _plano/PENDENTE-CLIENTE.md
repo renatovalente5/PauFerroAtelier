@@ -6,6 +6,8 @@ Ordenado por urgência. O primeiro ponto é o único que tem consequência legal
 
 ## 1. A morada. Isto é um problema legal, não uma preferência de design
 
+**Resolvido a 16 nov 2026:** o cliente deu o nome civil (Bruno Miguel Ferreira Leal) e a morada (Rua do Girassol, 53, Valongo); estão nos Termos, na Privacidade e em `data/definicoes.json › empresa`. Falta só o código postal.
+
 **O que o cliente disse:** não quer a morada publicada; é dada ao cliente quando
 se marca a visita.
 
