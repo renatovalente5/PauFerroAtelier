@@ -5,7 +5,7 @@ descricao: Condições de encomenda de peças por medida ao Pau Ferro Atelier, g
 
 # Termos e condições
 
-_Última actualização: 16 de novembro de 2026_
+_Última actualização: 22 de novembro de 2026_
 
 ## Quem somos
 
@@ -48,7 +48,7 @@ As condições concretas da peça constam do documento de venda entregue com ela
 
 ## Direito de livre resolução: não se aplica a peças por medida
 
-Nas compras à distância ou fora do estabelecimento, o consumidor tem em regra 14 dias para se arrepender, sem indicar motivo — o chamado direito de livre resolução, previsto no **Decreto-Lei n.º 24/2014**.
+Nas compras à distância ou fora do estabelecimento, o consumidor tem em regra 14 dias para desistir da compra — o chamado direito de livre resolução, previsto no **Decreto-Lei n.º 24/2014**.
 
 **Esse direito não existe quando o bem é feito à medida ou claramente personalizado**, por força da alínea c) do n.º 1 do artigo 17.º do mesmo diploma. É o caso de todas as peças deste atelier: são fabricadas de raiz para um cliente concreto, com as medidas e o acabamento que ele escolheu, e não podem ser recolocadas à venda.
 
