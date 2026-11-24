@@ -189,20 +189,18 @@ for (const f of paginas) {
 
 /* 10c. a identificação do prestador (DL 7/2004, art. 10.º: nome, morada
         geográfica, email em texto e NIF), pela guarda da biblioteca legal-comum.
-        Em modo «avisar», e não «bloquear», porque o site já está no ar e o nome
-        civil e a morada do titular estão por decidir com o cliente desde agosto
-        (_plano/PENDENTE-CLIENTE.md): a auditoria lembra-o a cada publicação sem
-        a travar. Quando ele os der, entram em data/definicoes.json («empresa»:
-        «titular» e «morada») e o modo passa a «bloquear». */
+        Em modo «bloquear» desde 24 nov 2026, quando o cliente deu o código postal:
+        o nome civil e a morada do titular estão completos em data/definicoes.json
+        («empresa»: «titular» e «morada»), e uma publicação sem eles pára aqui. */
 {
   const { problemas: faltas } = verificarIdentificacao({
     nome: DEF.empresa.titular,      // o nome civil do ENI; «Pau Ferro Atelier» é só o nome comercial
     formaJuridica: 'eni',
     nif: DEF.empresa.nif,
-    morada: DEF.empresa.morada,     // por indicar: «A morada é combinada directamente com o cliente»
+    morada: DEF.empresa.morada,
     email: DEF.contactos.email,
     telefone: DEF.contactos.telefone,
-  }, { modo: 'avisar', ecra: 'data/definicoes.json › empresa' });
+  }, { modo: 'bloquear', ecra: 'data/definicoes.json › empresa' });
   for (const p of faltas) aviso('identificação', `${p.campo}: ${p.mensagem}`);
 }
 

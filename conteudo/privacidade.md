@@ -5,11 +5,11 @@ descricao: Que dados o sítio do Pau Ferro Atelier recolhe, o que guarda no seu 
 
 # Política de privacidade
 
-_Última actualização: 16 de novembro de 2026_
+_Última actualização: 24 de novembro de 2026_
 
 ## Quem trata os seus dados
 
-O responsável pelo tratamento é **Bruno Miguel Ferreira Leal** (**Pau Ferro Atelier**), empresário em nome individual, número de identificação fiscal **247898511**, com morada na Rua do Girassol, 53, Valongo (distrito do Porto).
+O responsável pelo tratamento é **Bruno Miguel Ferreira Leal** (**Pau Ferro Atelier**), empresário em nome individual, número de identificação fiscal **247898511**, com morada na Rua do Girassol, 50, 4440-365 Sobrado, Valongo (distrito do Porto).
 
 Pode contactar-nos pelo telefone **916 862 737** (Chamada para a rede móvel nacional) ou por **geralpauferro@outlook.pt**.
 

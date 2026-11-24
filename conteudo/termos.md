@@ -5,11 +5,11 @@ descricao: Condições de encomenda de peças por medida ao Pau Ferro Atelier, g
 
 # Termos e condições
 
-_Última actualização: 22 de novembro de 2026_
+_Última actualização: 24 de novembro de 2026_
 
 ## Quem somos
 
-Este sítio é do **Pau Ferro Atelier**, de **Bruno Miguel Ferreira Leal**, empresário em nome individual, com o número de identificação fiscal **247898511**, a exercer actividade de marcenaria na **Rua do Girassol, 53, Valongo** (distrito do Porto), com visitas por marcação.
+Este sítio é do **Pau Ferro Atelier**, de **Bruno Miguel Ferreira Leal**, empresário em nome individual, com o número de identificação fiscal **247898511**, a exercer actividade de marcenaria na **Rua do Girassol, 50, 4440-365 Sobrado, Valongo** (distrito do Porto), com visitas por marcação.
 
 Contactos: telefone **916 862 737** (Chamada para a rede móvel nacional) e correio electrónico **geralpauferro@outlook.pt**.
 
