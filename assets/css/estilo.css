@@ -71,6 +71,11 @@ body {
   margin: 0; background: var(--papel); color: var(--tinta);
   font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
 }
+
+/* A página acaba na última linha do rodapé: nada de faixa nem espaço vazio por baixo dele. Nas páginas curtas o
+   rodapé fica no fundo do ecrã e o espaço que sobra fica dentro da página. */
+body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+body > main { flex: 1 0 auto; }
 h1, h2, h3, h4, p, figure, ul, ol, dl, dd { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 img, svg, picture, video { display: block; max-width: 100%; }
